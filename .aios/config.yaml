@@ -1,0 +1,18 @@
+# AIOS Project Configuration
+version: 2.1.0
+project:
+  name: matrix
+  type: existing-react-app
+  created: 2026-01-27
+
+environment:
+  bootstrapped: true
+  bootstrap_date: 2026-01-27T18:35:00Z
+
+workflow:
+  current: eisenhower-matrix
+  phase: environment-bootstrap-complete
+
+settings:
+  auto_update_status: true
+  quality_gates_enabled: true
