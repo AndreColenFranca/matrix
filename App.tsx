@@ -176,7 +176,7 @@ const App: React.FC = () => {
           </span>
         </div>
         <h1 className="text-4xl font-extrabold text-slate-900 mb-2">Matriz Eisenhower <span className="text-indigo-600">AI</span></h1>
-        <p className="text-slate-500 max-w-lg mx-auto">Categorize tarefas com inteligência e organize seu WhatsApp.</p>
+        <p className="text-slate-500 max-w-lg mx-auto">Categorize tarefas com inteligência e organize seu ZAP.</p>
       </header>
 
       <div className="flex flex-col gap-8">
