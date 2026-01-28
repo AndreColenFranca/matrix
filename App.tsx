@@ -1,15 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
-import { Task, Quadrant } from './types';
+import React, { useState } from 'react';
+import { Quadrant } from './types';
 import { categorizeTask } from './geminiService';
 import { EisenhowerMatrix } from './components/EisenhowerMatrix';
 import { ActivityInput } from './components/ActivityInput';
-
-interface Config {
-  url: string;
-  token: string;
-  number: string;
-}
+import { Login } from './components/Auth/Login';
+import { useAuth } from './contexts/AuthContext';
+import { useTasks } from './hooks/useTasks';
+import { useUserConfig } from './hooks/useUserConfig';
 
 interface ToastState {
   message: string;
@@ -17,43 +15,19 @@ interface ToastState {
   visible: boolean;
 }
 
-const DEFAULT_CONFIG: Config = {
-  url: 'https://free.uazapi.com/send/text',
-  token: '', 
-  number: '5531994718445'
-};
-
 const App: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { user, signOut, loading: authLoading } = useAuth();
+  const { tasks, addTask, deleteTask, clearAllTasks, loading: tasksLoading } = useTasks();
+  const { config, updateConfig } = useUserConfig();
+
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [config, setConfig] = useState<Config>(DEFAULT_CONFIG);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [apiLastError, setApiLastError] = useState<number | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'unknown' | 'online' | 'offline'>('unknown');
   const [toast, setToast] = useState<ToastState>({ message: '', type: 'info', visible: false });
-
-  // Load state and config from local storage
-  useEffect(() => {
-    const savedTasks = localStorage.getItem('eisenhower_tasks');
-    if (savedTasks) {
-      try { setTasks(JSON.parse(savedTasks)); } catch (e) { console.error(e); }
-    }
-    const savedConfig = localStorage.getItem('eisenhower_config');
-    if (savedConfig) {
-      try { 
-        const parsed = JSON.parse(savedConfig);
-        if (!parsed.url) parsed.url = DEFAULT_CONFIG.url;
-        setConfig(parsed); 
-      } catch (e) { console.error(e); }
-    }
-  }, []);
-
-  // Persist tasks and config
-  useEffect(() => { localStorage.setItem('eisenhower_tasks', JSON.stringify(tasks)); }, [tasks]);
-  useEffect(() => { localStorage.setItem('eisenhower_config', JSON.stringify(config)); }, [config]);
 
   const showToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
     setToast({ message, type, visible: true });
@@ -66,14 +40,8 @@ const App: React.FC = () => {
     setError(null);
     try {
       const quadrant = await categorizeTask(activity);
-      const newTask: Task = {
-        id: Math.random().toString(36).substr(2, 9),
-        text: activity,
-        quadrant,
-        createdAt: Date.now()
-      };
-      setTasks(prev => [newTask, ...prev]);
-      
+      await addTask(activity, quadrant);
+
       const quadrantNames: Record<Quadrant, string> = {
         [Quadrant.DO]: 'Fazer Agora',
         [Quadrant.SCHEDULE]: 'Agendar',
@@ -88,15 +56,32 @@ const App: React.FC = () => {
     }
   };
 
-  const handleDeleteTask = (id: string) => {
-    setTasks(prev => prev.filter(t => t.id !== id));
-    showToast("🗑️ Tarefa removida com sucesso.", "info");
+  const handleDeleteTask = async (id: string) => {
+    try {
+      await deleteTask(id);
+      showToast("🗑️ Tarefa removida com sucesso.", "info");
+    } catch (err) {
+      showToast("Erro ao remover tarefa", "error");
+    }
   };
 
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     if (window.confirm("Tem certeza que deseja limpar todas as tarefas?")) {
-      setTasks([]);
-      showToast("🧹 Todas as tarefas foram removidas.", "info");
+      try {
+        await clearAllTasks();
+        showToast("🧹 Todas as tarefas foram removidas.", "info");
+      } catch (err) {
+        showToast("Erro ao limpar tarefas", "error");
+      }
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      showToast("Logout realizado com sucesso", "success");
+    } catch (err) {
+      showToast("Erro ao fazer logout", "error");
     }
   };
 
@@ -116,7 +101,7 @@ const App: React.FC = () => {
   };
 
   const sendToWhatsApp = async () => {
-    if (!config.token) {
+    if (!config.uazapi_token) {
       setIsSettingsOpen(true);
       return;
     }
@@ -128,10 +113,10 @@ const App: React.FC = () => {
     setApiLastError(null);
     setError(null);
     try {
-      const response = await fetch(config.url, {
+      const response = await fetch(config.uazapi_url, {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'token': config.token },
-        body: JSON.stringify({ number: config.number, text: formatMatrixForWhatsApp() })
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'token': config.uazapi_token },
+        body: JSON.stringify({ number: config.uazapi_number, text: formatMatrixForWhatsApp() })
       });
       if (response.ok) {
         setConnectionStatus('online');
@@ -148,6 +133,21 @@ const App: React.FC = () => {
       setSending(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-indigo-700">
+        <div className="text-center">
+          <i className="fas fa-spinner fa-spin text-4xl text-white mb-4"></i>
+          <p className="text-white font-semibold">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 pb-20">
@@ -166,6 +166,15 @@ const App: React.FC = () => {
       </div>
 
       <header className="mb-10 text-center relative">
+        <div className="absolute left-0 top-0 hidden md:flex items-center gap-2">
+          <span className="text-xs text-slate-500 font-medium">Olá, <span className="font-bold text-slate-700">{user.email?.split('@')[0]}</span></span>
+          <button
+            onClick={handleLogout}
+            className="ml-4 px-3 py-1 text-xs rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all"
+          >
+            <i className="fas fa-sign-out-alt mr-1"></i> Logout
+          </button>
+        </div>
         <div className="absolute right-0 top-0 hidden md:flex items-center gap-2">
           <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase border transition-colors ${
             connectionStatus === 'online' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
@@ -272,15 +281,15 @@ const App: React.FC = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Token UAZAPI</label>
-                  <input type="text" value={config.token} onChange={(e) => { setConfig({ ...config, token: e.target.value }); setApiLastError(null); }} placeholder="Seu token..." className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-mono ${apiLastError === 401 ? 'border-red-300 bg-red-50' : 'border-slate-200'}`} />
+                  <input type="text" value={config.uazapi_token || ''} onChange={(e) => { updateConfig({ uazapi_token: e.target.value }); setApiLastError(null); }} placeholder="Seu token..." className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-mono ${apiLastError === 401 ? 'border-red-300 bg-red-50' : 'border-slate-200'}`} />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">WhatsApp Destino</label>
-                  <input type="text" value={config.number} onChange={(e) => setConfig({ ...config, number: e.target.value })} placeholder="Ex: 5531994718445" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm" />
+                  <input type="text" value={config.uazapi_number} onChange={(e) => updateConfig({ uazapi_number: e.target.value })} placeholder="Ex: 5531994718445" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm" />
                 </div>
               </div>
               <div className="pt-2 flex justify-end gap-3">
-                <button onClick={() => { setConfig(DEFAULT_CONFIG); setApiLastError(null); setConnectionStatus('unknown'); showToast("Configurações resetadas.", "info"); }} className="text-xs text-slate-400 hover:text-slate-600">Restaurar</button>
+                <button onClick={() => { setApiLastError(null); setConnectionStatus('unknown'); showToast("Configurações resetadas.", "info"); }} className="text-xs text-slate-400 hover:text-slate-600">Restaurar</button>
                 <button onClick={() => { setIsSettingsOpen(false); showToast("Configurações salvas!", "success"); }} className="px-8 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all active:scale-95 shadow-lg shadow-indigo-100">Salvar</button>
               </div>
             </div>

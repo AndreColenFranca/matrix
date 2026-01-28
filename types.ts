@@ -8,9 +8,20 @@ export enum Quadrant {
 
 export interface Task {
   id: string;
+  user_id: string;
   text: string;
   quadrant: Quadrant;
-  createdAt: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserConfig {
+  user_id: string;
+  uazapi_url: string;
+  uazapi_token: string | null;
+  uazapi_number: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface EisenhowerState {
