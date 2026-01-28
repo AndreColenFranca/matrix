@@ -1,0 +1,5 @@
+{
+  "name": "Eisenhower AI Matrix - Alan",
+  "description": "Uma ferramenta inteligente que utiliza o Gemini para organizar suas tarefas na Matriz de Eisenhower e permite o envio rápido da sua agenda organizada diretamente para o WhatsApp.",
+  "requestFramePermissions": []
+}
