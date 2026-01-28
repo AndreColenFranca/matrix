@@ -17,7 +17,7 @@ interface ToastState {
 
 const App: React.FC = () => {
   const { user, signOut, loading: authLoading } = useAuth();
-  const { tasks, addTask, deleteTask, clearAllTasks, loading: tasksLoading } = useTasks();
+  const { tasks, addTask, deleteTask, clearAllTasks, updateTask, loading: tasksLoading } = useTasks();
   const { config, updateConfig } = useUserConfig();
 
   const [loading, setLoading] = useState(false);
@@ -82,6 +82,21 @@ const App: React.FC = () => {
       showToast("Logout realizado com sucesso", "success");
     } catch (err) {
       showToast("Erro ao fazer logout", "error");
+    }
+  };
+
+  const handleMoveTask = async (id: string, newQuadrant: Quadrant) => {
+    try {
+      await updateTask(id, newQuadrant);
+      const quadrantNames: Record<Quadrant, string> = {
+        [Quadrant.DO]: 'Fazer Agora',
+        [Quadrant.SCHEDULE]: 'Agendar',
+        [Quadrant.DELEGATE]: 'Delegar',
+        [Quadrant.ELIMINATE]: 'Eliminar'
+      };
+      showToast(`✨ Tarefa movida para "${quadrantNames[newQuadrant]}"!`, "success");
+    } catch (err) {
+      showToast("Erro ao mover tarefa", "error");
     }
   };
 
@@ -249,7 +264,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        <EisenhowerMatrix tasks={tasks} onDelete={handleDeleteTask} />
+        <EisenhowerMatrix tasks={tasks} onDelete={handleDeleteTask} onMove={handleMoveTask} />
       </div>
 
       {/* Settings Modal */}
