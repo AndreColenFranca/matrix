@@ -1,6 +1,5 @@
-
-import { GoogleGenAI, Type } from "@google/genai";
-import { Quadrant } from "./types";
+import { GoogleGenAI, Type } from '@google/genai';
+import { Quadrant } from './types';
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
@@ -17,21 +16,21 @@ export async function categorizeTask(taskDescription: string): Promise<Quadrant>
 
     Responda apenas com o JSON contendo a categoria: DO, SCHEDULE, DELEGATE ou ELIMINATE.`,
     config: {
-      responseMimeType: "application/json",
+      responseMimeType: 'application/json',
       responseSchema: {
         type: Type.OBJECT,
         properties: {
           category: {
             type: Type.STRING,
-            description: "A categoria da Matriz: DO, SCHEDULE, DELEGATE ou ELIMINATE",
-          }
+            description: 'A categoria da Matriz: DO, SCHEDULE, DELEGATE ou ELIMINATE',
+          },
         },
-        required: ["category"]
-      }
+        required: ['category'],
+      },
     },
   });
 
-  const text = response.text || "";
+  const text = response.text || '';
   try {
     const json = JSON.parse(text.trim());
     const cat = json.category.toUpperCase();
@@ -40,7 +39,7 @@ export async function categorizeTask(taskDescription: string): Promise<Quadrant>
     }
     return Quadrant.DO;
   } catch (e) {
-    console.error("Erro ao processar resposta do Gemini:", e);
+    console.error('Erro ao processar resposta do Gemini:', e);
     return Quadrant.DO;
   }
 }

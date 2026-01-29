@@ -5,6 +5,7 @@ This directory contains workflow definitions for the Synkra AIOS framework. Work
 ## Available Workflows
 
 ### Development Workflows
+
 - **brownfield-fullstack.md** - Workflow for existing full-stack projects
 - **brownfield-service.md** - Workflow for existing service/backend projects
 - **brownfield-ui.md** - Workflow for existing UI/frontend projects
@@ -13,6 +14,7 @@ This directory contains workflow definitions for the Synkra AIOS framework. Work
 - **greenfield-ui.md** - Workflow for new UI/frontend projects
 
 ### Configuration Workflows
+
 - **setup-environment.yaml** - Configure IDE (Windsurf/Cursor/Claude Code) with AIOS development rules
 
 ## Setup Environment Workflow
@@ -20,6 +22,7 @@ This directory contains workflow definitions for the Synkra AIOS framework. Work
 The `setup-environment` workflow helps developers configure their IDE for optimal AIOS development experience.
 
 ### Features
+
 - Detects installed IDEs (Windsurf, Cursor, Claude Code)
 - Backs up existing IDE configurations
 - Applies AIOS-specific development rules
@@ -29,17 +32,20 @@ The `setup-environment` workflow helps developers configure their IDE for optima
 ### Usage
 
 From the aios-master agent:
+
 ```
 @aios-master
 *setup-environment
 ```
 
 Or directly via npm:
+
 ```bash
 npm run setup:environment
 ```
 
 ### What It Does
+
 1. **IDE Detection** - Scans for `.windsurf/`, `.cursor/`, or `.claude/` directories
 2. **GitHub CLI Check** - Ensures GitHub CLI is installed and authenticated
 3. **Backup Creation** - Saves existing rules before making changes
@@ -47,11 +53,13 @@ npm run setup:environment
 5. **Verification** - Confirms successful setup
 
 ### IDE Rule Locations
+
 - **Windsurf**: `.windsurf/rules`
 - **Cursor**: `.cursorules`
 - **Claude Code**: `.claude/CLAUDE.md`
 
 ### Requirements
+
 - Node.js 18+
 - One or more supported IDEs installed
 - GitHub CLI (recommended)
@@ -61,6 +69,7 @@ npm run setup:environment
 Workflows can be defined in YAML or Markdown format with YAML frontmatter. See existing workflows for examples.
 
 ### Workflow Structure
+
 ```yaml
 workflow:
   id: unique-workflow-id
@@ -68,7 +77,7 @@ workflow:
   description: What this workflow does
   type: configuration|development|deployment
   metadata:
-    elicit: true  # If user interaction required
+    elicit: true # If user interaction required
     confirmation_required: true
   steps:
     - id: step-1
@@ -77,6 +86,7 @@ workflow:
 ```
 
 ## Best Practices
+
 1. Keep workflows focused on a single objective
 2. Include error handling for each step
 3. Provide clear user feedback

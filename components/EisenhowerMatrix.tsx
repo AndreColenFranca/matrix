@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Task, Quadrant } from '../types';
 
@@ -19,13 +18,24 @@ interface QuadrantBoxProps {
   currentQuadrant: Quadrant;
 }
 
-const QuadrantBox: React.FC<QuadrantBoxProps> = ({ title, subtitle, colorClass, icon, tasks, onDelete, onMove, currentQuadrant }) => {
+const QuadrantBox: React.FC<QuadrantBoxProps> = ({
+  title,
+  subtitle,
+  colorClass,
+  icon,
+  tasks,
+  onDelete,
+  onMove,
+  currentQuadrant,
+}) => {
   const [showMoveMenu, setShowMoveMenu] = React.useState<string | null>(null);
 
-  const otherQuadrants = Object.values(Quadrant).filter(q => q !== currentQuadrant);
+  const otherQuadrants = Object.values(Quadrant).filter((q) => q !== currentQuadrant);
 
   return (
-    <div className={`flex flex-col h-full rounded-2xl border-2 p-4 min-h-[300px] transition-all ${colorClass}`}>
+    <div
+      className={`flex flex-col h-full rounded-2xl border-2 p-4 min-h-[300px] transition-all ${colorClass}`}
+    >
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-xl font-bold flex items-center gap-2">
@@ -45,12 +55,14 @@ const QuadrantBox: React.FC<QuadrantBoxProps> = ({ title, subtitle, colorClass, 
             Nenhuma atividade
           </div>
         ) : (
-          tasks.map(task => (
+          tasks.map((task) => (
             <div
               key={task.id}
               className="bg-white/90 p-3 rounded-lg shadow-sm border border-slate-100 flex justify-between items-start group animate-in slide-in-from-top-2 duration-300 relative"
             >
-              <span className="text-sm font-medium text-slate-800 leading-tight flex-1">{task.text}</span>
+              <span className="text-sm font-medium text-slate-800 leading-tight flex-1">
+                {task.text}
+              </span>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="relative">
                   <button
@@ -62,7 +74,7 @@ const QuadrantBox: React.FC<QuadrantBoxProps> = ({ title, subtitle, colorClass, 
                   </button>
                   {showMoveMenu === task.id && (
                     <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-slate-200 z-50 min-w-[140px]">
-                      {otherQuadrants.map(quadrant => (
+                      {otherQuadrants.map((quadrant) => (
                         <button
                           key={quadrant}
                           onClick={() => {
@@ -97,7 +109,7 @@ const QuadrantBox: React.FC<QuadrantBoxProps> = ({ title, subtitle, colorClass, 
 };
 
 export const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ tasks, onDelete, onMove }) => {
-  const getTasksByQuadrant = (q: Quadrant) => tasks.filter(t => t.quadrant === q);
+  const getTasksByQuadrant = (q: Quadrant) => tasks.filter((t) => t.quadrant === q);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">

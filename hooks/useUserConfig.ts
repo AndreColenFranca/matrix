@@ -13,7 +13,9 @@ interface UseUserConfigResult {
   config: Omit<UserConfig, 'user_id' | 'created_at' | 'updated_at'>;
   loading: boolean;
   error: string | null;
-  updateConfig: (newConfig: Partial<Omit<UserConfig, 'user_id' | 'created_at' | 'updated_at'>>) => Promise<void>;
+  updateConfig: (
+    newConfig: Partial<Omit<UserConfig, 'user_id' | 'created_at' | 'updated_at'>>
+  ) => Promise<void>;
 }
 
 export const useUserConfig = (): UseUserConfigResult => {
@@ -46,11 +48,12 @@ export const useUserConfig = (): UseUserConfigResult => {
           throw fetchError;
         }
 
-        if (data) {
+        if (data && typeof data === 'object') {
           setConfig({
-            uazapi_url: data.uazapi_url,
-            uazapi_token: data.uazapi_token,
-            uazapi_number: data.uazapi_number,
+            uazapi_url: (data as Record<string, any>).uazapi_url || DEFAULT_CONFIG.uazapi_url,
+            uazapi_token: (data as Record<string, any>).uazapi_token || null,
+            uazapi_number:
+              (data as Record<string, any>).uazapi_number || DEFAULT_CONFIG.uazapi_number,
           });
         } else {
           setConfig(DEFAULT_CONFIG);
@@ -88,29 +91,33 @@ export const useUserConfig = (): UseUserConfigResult => {
 
         if (existingData) {
           // Update existing
-          const { error: updateError } = await supabase
+          const updateData = {
+            uazapi_url: updatedConfig.uazapi_url,
+            uazapi_token: updatedConfig.uazapi_token,
+            uazapi_number: updatedConfig.uazapi_number,
+            updated_at: new Date().toISOString(),
+          };
+
+          const { error: updateError } = await (supabase
             .from('user_config')
-            .update({
-              uazapi_url: updatedConfig.uazapi_url,
-              uazapi_token: updatedConfig.uazapi_token,
-              uazapi_number: updatedConfig.uazapi_number,
-              updated_at: new Date().toISOString(),
-            })
-            .eq('user_id', user.id);
+            .update(updateData)
+            .eq('user_id', user.id) as any);
 
           if (updateError) throw updateError;
         } else {
           // Insert new
-          const { error: insertError } = await supabase.from('user_config').insert([
-            {
-              user_id: user.id,
-              uazapi_url: updatedConfig.uazapi_url,
-              uazapi_token: updatedConfig.uazapi_token,
-              uazapi_number: updatedConfig.uazapi_number,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            },
-          ]);
+          const insertData = {
+            user_id: user.id,
+            uazapi_url: updatedConfig.uazapi_url,
+            uazapi_token: updatedConfig.uazapi_token,
+            uazapi_number: updatedConfig.uazapi_number,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const query: any = supabase.from('user_config').insert([insertData]);
+          const { error: insertError } = await query;
 
           if (insertError) throw insertError;
         }

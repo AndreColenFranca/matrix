@@ -8,7 +8,7 @@ Create a new service using standardized Handlebars templates from WIS-10. Genera
 
 ```yaml
 task: createService()
-agent: "@dev"
+agent: '@dev'
 responsável: Dex (Developer)
 responsavel_type: Agente
 atomic_layer: Config
@@ -19,14 +19,14 @@ inputs:
   - name: service_name
     type: string
     required: true
-    pattern: "^[a-z][a-z0-9-]*$"
+    pattern: '^[a-z][a-z0-9-]*$'
     validation: Must be kebab-case, start with letter
 
   - name: service_type
     type: enum
-    options: ["api-integration", "utility", "agent-tool"]
+    options: ['api-integration', 'utility', 'agent-tool']
     required: true
-    default: "utility"
+    default: 'utility'
 
   - name: has_auth
     type: boolean
@@ -46,7 +46,7 @@ inputs:
 outputs:
   - name: service_directory
     type: directory
-    location: ".aios-core/infrastructure/services/{service_name}/"
+    location: '.aios-core/infrastructure/services/{service_name}/'
     persistido: true
 
   - name: files_created
@@ -85,6 +85,7 @@ pre-conditions:
 ## Interactive Elicitation Process
 
 ### Step 1: Service Name
+
 ```
 ELICIT: Service Name
 
@@ -97,6 +98,7 @@ What is the service name?
 ```
 
 ### Step 2: Service Type
+
 ```
 ELICIT: Service Type
 
@@ -111,6 +113,7 @@ What type of service is this?
 ```
 
 ### Step 3: Authentication
+
 ```
 ELICIT: Authentication Required
 
@@ -124,6 +127,7 @@ Does this service require authentication?
 ```
 
 ### Step 4: Description
+
 ```
 ELICIT: Service Description
 
@@ -134,6 +138,7 @@ Brief description of the service:
 ```
 
 ### Step 5: Environment Variables
+
 ```
 ELICIT: Environment Variables
 
@@ -152,6 +157,7 @@ Examples: API_KEY, BASE_URL, TIMEOUT_MS
 ## Implementation Steps
 
 ### Step 1: Validate Inputs
+
 ```javascript
 // Validate service_name
 const namePattern = /^[a-z][a-z0-9-]*$/;
@@ -167,6 +173,7 @@ if (fs.existsSync(targetDir)) {
 ```
 
 ### Step 2: Load Templates
+
 ```javascript
 const templateDir = '.aios-core/development/templates/service-template/';
 const templates = [
@@ -175,9 +182,9 @@ const templates = [
   'types.ts.hbs',
   'errors.ts.hbs',
   'package.json.hbs',
-  'tsconfig.json',      // Static (no .hbs)
-  'jest.config.js',     // Static (no .hbs)
-  '__tests__/index.test.ts.hbs'
+  'tsconfig.json', // Static (no .hbs)
+  'jest.config.js', // Static (no .hbs)
+  '__tests__/index.test.ts.hbs',
 ];
 
 // Conditional: client.ts.hbs only for api-integration
@@ -187,24 +194,26 @@ if (serviceType === 'api-integration') {
 ```
 
 ### Step 3: Prepare Template Context
+
 ```javascript
 const context = {
-  serviceName: serviceName,                    // kebab-case
-  pascalCase: toPascalCase(serviceName),       // PascalCase
-  camelCase: toCamelCase(serviceName),         // camelCase
+  serviceName: serviceName, // kebab-case
+  pascalCase: toPascalCase(serviceName), // PascalCase
+  camelCase: toCamelCase(serviceName), // camelCase
   description: description,
   isApiIntegration: serviceType === 'api-integration',
   hasAuth: hasAuth,
-  envVars: envVars.map(v => ({
+  envVars: envVars.map((v) => ({
     name: v,
-    description: `${v} environment variable`
+    description: `${v} environment variable`,
   })),
   storyId: 'WIS-11',
-  createdAt: new Date().toISOString().split('T')[0]
+  createdAt: new Date().toISOString().split('T')[0],
 };
 ```
 
 ### Step 4: Generate Files
+
 ```javascript
 // Create target directory
 fs.mkdirSync(targetDir, { recursive: true });
@@ -216,9 +225,7 @@ for (const templateFile of templates) {
   const isHandlebars = templateFile.endsWith('.hbs');
 
   // Determine output filename
-  const outputFile = isHandlebars
-    ? templateFile.replace('.hbs', '')
-    : templateFile;
+  const outputFile = isHandlebars ? templateFile.replace('.hbs', '') : templateFile;
   const outputPath = `${targetDir}${outputFile}`;
 
   if (isHandlebars) {
@@ -235,6 +242,7 @@ for (const templateFile of templates) {
 ```
 
 ### Step 5: Post-Generation
+
 ```bash
 # Navigate to service directory
 cd .aios-core/infrastructure/services/{service_name}/
@@ -257,15 +265,17 @@ The following helpers must be available:
 
 ```javascript
 Handlebars.registerHelper('pascalCase', (str) => {
-  return str.split('-').map(word =>
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join('');
+  return str
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
 });
 
 Handlebars.registerHelper('camelCase', (str) => {
-  const pascal = str.split('-').map(word =>
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join('');
+  const pascal = str
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
   return pascal.charAt(0).toLowerCase() + pascal.slice(1);
 });
 
@@ -304,15 +314,16 @@ post-conditions:
 
 ## Error Handling
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| Service name exists | Directory already present | Prompt for different name |
-| Template not found | WIS-10 not installed | Error: "Run WIS-10 first" |
-| npm install fails | Network/package issues | Warning, continue without deps |
-| Build fails | TypeScript errors | Warning, show errors, continue |
-| Invalid name format | Name not kebab-case | Re-prompt with validation error |
+| Error               | Cause                     | Resolution                      |
+| ------------------- | ------------------------- | ------------------------------- |
+| Service name exists | Directory already present | Prompt for different name       |
+| Template not found  | WIS-10 not installed      | Error: "Run WIS-10 first"       |
+| npm install fails   | Network/package issues    | Warning, continue without deps  |
+| Build fails         | TypeScript errors         | Warning, show errors, continue  |
+| Invalid name format | Name not kebab-case       | Re-prompt with validation error |
 
 **Error Recovery Strategy:**
+
 ```javascript
 // Atomic generation - rollback on failure
 try {
@@ -378,7 +389,7 @@ token_usage: ~1,000-2,000 tokens
 story: WIS-11
 version: 1.0.0
 created: 2025-12-24
-author: "@dev (Dex)"
+author: '@dev (Dex)'
 dependencies:
   templates:
     - service-template/ (from WIS-10)

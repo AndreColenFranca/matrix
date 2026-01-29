@@ -9,12 +9,15 @@ Synkra AIOS is a meta-framework that orchestrates AI agents to handle complex de
 ## Agent System
 
 ### Agent Activation
+
 - Agents are activated with @agent-name syntax: @dev, @qa, @architect, @pm, @po, @sm, @analyst
 - The master agent is activated with @aios-master
-- Agent commands use the * prefix: *help, *create-story, *task, *exit
+- Agent commands use the * prefix: *help, *create-story, *task, \*exit
 
 ### Agent Context
+
 When an agent is active:
+
 - Follow that agent's specific persona and expertise
 - Use the agent's designated workflow patterns
 - Maintain the agent's perspective throughout the interaction
@@ -22,12 +25,14 @@ When an agent is active:
 ## Development Methodology
 
 ### Story-Driven Development
+
 1. **Work from stories** - All development starts with a story in `docs/stories/`
 2. **Update progress** - Mark checkboxes as tasks complete: [ ] → [x]
 3. **Track changes** - Maintain the File List section in the story
 4. **Follow criteria** - Implement exactly what the acceptance criteria specify
 
 ### Code Standards
+
 - Write clean, self-documenting code
 - Follow existing patterns in the codebase
 - Include comprehensive error handling
@@ -35,6 +40,7 @@ When an agent is active:
 - Use TypeScript/JavaScript best practices
 
 ### Testing Requirements
+
 - Run all tests before marking tasks complete
 - Ensure linting passes: `npm run lint`
 - Verify type checking: `npm run typecheck`
@@ -62,23 +68,29 @@ docs/
 ## Cline-Specific Configuration
 
 ### Agent Rules Location
+
 - Rules are stored in `.cline/rules/`
 - Use @agent-name to activate agents in chat
 
 ### Tool Permissions
+
 Cline requires explicit approval for:
+
 - File creation/modification
 - Terminal commands
 - Browser actions
 
 ### Performance Tips
+
 - Use the task panel for complex multi-step operations
 - Leverage diff view for reviewing changes
 - Enable auto-approve for trusted operations
 
 ### MCP Integration
+
 - Cline supports MCP servers for extended functionality
 - Configure in Cline settings for additional tools
 
 ---
-*Synkra AIOS Cline Configuration v2.1*
+
+_Synkra AIOS Cline Configuration v2.1_

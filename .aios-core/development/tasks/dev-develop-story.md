@@ -11,16 +11,19 @@ Execute story development with selectable automation modes to accommodate differ
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -28,6 +31,7 @@ Execute story development with selectable automation modes to accommodate differ
 **Parameter:** `mode` (optional, default: `interactive`)
 
 **Usage**:
+
 ```
 *develop {story-id}           # Uses interactive mode (default)
 *develop {story-id} yolo      # Uses YOLO mode
@@ -35,6 +39,7 @@ Execute story development with selectable automation modes to accommodate differ
 ```
 
 **Edge Case Handling**:
+
 - Invalid mode → Default to interactive with warning
 - User cancellation → Exit gracefully with message
 - Missing story file → Clear error message, halt execution
@@ -187,6 +192,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -206,7 +212,6 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Mode: YOLO (Autonomous)
 
 ### Workflow
@@ -214,13 +219,14 @@ updated_at: 2025-11-17
 **CRITICAL: Decision Logging Integration (Story 6.1.2.6.2 Phase 2)**
 
 Before starting, load decision logging infrastructure:
+
 ```javascript
 const {
   initializeDecisionLogging,
   recordDecision,
   trackFile,
   trackTest,
-  completeDecisionLogging
+  completeDecisionLogging,
 } = require('./.aios-core/scripts/decision-recorder');
 ```
 
@@ -230,7 +236,7 @@ const {
    - **Initialize decision logging**:
      ```javascript
      const context = await initializeDecisionLogging('dev', storyPath, {
-       agentLoadTime: loadTimeInMs  // From agent startup metrics
+       agentLoadTime: loadTimeInMs, // From agent startup metrics
      });
      ```
    - Identify all tasks and acceptance criteria
@@ -241,40 +247,44 @@ const {
    - **Make autonomous decisions** and LOG immediately:
 
      **Architecture choices**:
+
      ```javascript
      recordDecision({
        description: 'Use microservices architecture for user service',
        reason: 'Better scalability and independent deployment',
        alternatives: ['Monolithic architecture', 'Serverless functions'],
        type: 'architecture',
-       priority: 'high'
+       priority: 'high',
      });
      ```
 
      **Library selections**:
+
      ```javascript
      recordDecision({
        description: 'Use Axios for HTTP client',
        reason: 'Better error handling, interceptor support, TypeScript definitions',
        alternatives: ['Fetch API (native)', 'Got library', 'node-fetch'],
        type: 'library-choice',
-       priority: 'medium'
+       priority: 'medium',
      });
      ```
 
      **Algorithm implementations**:
+
      ```javascript
      recordDecision({
        description: 'Use binary search for user lookup',
        reason: 'O(log n) performance vs O(n) linear search',
        alternatives: ['Linear search', 'Hash map lookup'],
        type: 'algorithm',
-       priority: 'medium'
+       priority: 'medium',
      });
      ```
 
    - Implement task and subtasks
    - **Track file modifications**:
+
      ```javascript
      trackFile('src/api/users.js', 'created');
      trackFile('package.json', 'modified');
@@ -284,11 +294,12 @@ const {
    - Write tests
    - Execute validations
    - **Track test execution**:
+
      ```javascript
      trackTest({
        name: 'users.test.js',
        passed: true,
-       duration: 125  // milliseconds
+       duration: 125, // milliseconds
      });
      ```
 
@@ -425,6 +436,7 @@ const {
 ### Story File Updates (All Modes)
 
 **CRITICAL**: ONLY update these sections:
+
 - Tasks / Subtasks checkboxes
 - Dev Agent Record section and all subsections
 - Agent Model Used
@@ -439,6 +451,7 @@ const {
 ### Blocking Conditions (All Modes)
 
 **HALT and ask user if**:
+
 - Unapproved dependencies needed
 - Ambiguous requirements after checking story
 - 3 failures attempting to implement or fix something
@@ -540,8 +553,8 @@ async function runCodeRabbitSelfHealing(storyPath) {
     const output = await runCodeRabbitCLI('uncommitted');
     const issues = parseCodeRabbitOutput(output);
 
-    const criticalIssues = issues.filter(i => i.severity === 'CRITICAL');
-    const highIssues = issues.filter(i => i.severity === 'HIGH');
+    const criticalIssues = issues.filter((i) => i.severity === 'CRITICAL');
+    const highIssues = issues.filter((i) => i.severity === 'HIGH');
 
     console.log(`   Found: ${criticalIssues.length} CRITICAL, ${highIssues.length} HIGH`);
 
@@ -575,12 +588,12 @@ async function runCodeRabbitSelfHealing(storyPath) {
 
 ### Severity Handling
 
-| Severity | Behavior | Notes |
-|----------|----------|-------|
-| **CRITICAL** | Auto-fix (max 2 attempts) | Security vulnerabilities, breaking bugs |
-| **HIGH** | Document in story Dev Notes | Recommend fix before QA |
-| **MEDIUM** | Ignore | @qa will handle |
-| **LOW** | Ignore | Nits, not blocking |
+| Severity     | Behavior                    | Notes                                   |
+| ------------ | --------------------------- | --------------------------------------- |
+| **CRITICAL** | Auto-fix (max 2 attempts)   | Security vulnerabilities, breaking bugs |
+| **HIGH**     | Document in story Dev Notes | Recommend fix before QA                 |
+| **MEDIUM**   | Ignore                      | @qa will handle                         |
+| **LOW**      | Ignore                      | Nits, not blocking                      |
 
 ### Timeout
 
@@ -610,11 +623,11 @@ try {
 
 ### Integration with Execution Modes
 
-| Mode | Self-Healing Behavior |
-|------|----------------------|
-| **YOLO** | Automatic, no prompts |
+| Mode            | Self-Healing Behavior      |
+| --------------- | -------------------------- |
+| **YOLO**        | Automatic, no prompts      |
 | **Interactive** | Shows progress, no prompts |
-| **Pre-Flight** | Included in execution plan |
+| **Pre-Flight**  | Included in execution plan |
 
 ---
 
@@ -675,6 +688,7 @@ function validateStoryFile(storyId) {
 **Format**: ADR (Architecture Decision Record) - automatically generated by `completeDecisionLogging()`
 
 **Sections**:
+
 1. **Context** - Story info, execution time, files modified, tests run
 2. **Decisions Made** - All autonomous decisions with type/priority classification
 3. **Rationale & Alternatives** - Why each choice was made, what else was considered
@@ -682,6 +696,7 @@ function validateStoryFile(storyId) {
 5. **Consequences & Rollback** - Git commit hash, rollback instructions, performance impact
 
 **Example Output**:
+
 ```markdown
 # Decision Log: Story 6.1.2.6.2
 
@@ -716,6 +731,7 @@ function validateStoryFile(storyId) {
 **Reason:** Better error handling, interceptor support, and TypeScript definitions
 
 **Alternatives Considered:**
+
 - Fetch API (native)
 - Got library
 - node-fetch
@@ -740,10 +756,13 @@ function validateStoryFile(storyId) {
 ### Rollback Instructions
 
 \`\`\`bash
+
 # Full rollback
+
 git reset --hard abc123def456
 
 # Selective file rollback
+
 git checkout abc123def456 -- <file-path>
 \`\`\`
 
@@ -767,6 +786,7 @@ git checkout abc123def456 -- <file-path>
 ```
 
 **Output**:
+
 ```
 🚀 YOLO Mode - Autonomous Development
 📋 Story 3.14: GitHub DevOps Agent
@@ -788,6 +808,7 @@ git checkout abc123def456 -- <file-path>
 ```
 
 **Output**:
+
 ```
 💬 Interactive Mode - Balanced Development
 📋 Story 3.15: Expansion Pack Auto Configuration
@@ -808,6 +829,7 @@ git checkout abc123def456 -- <file-path>
 ```
 
 **Output**:
+
 ```
 ✈️ Pre-Flight Planning Mode
 📋 Story 3.16: Data Architecture Capability

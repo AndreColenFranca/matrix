@@ -182,6 +182,7 @@ token_usage: ~800-2,500 tokens
 ```
 
 **Optimization Notes:**
+
 - Validate configuration early; use atomic writes; implement rollback checkpoints
 
 ---
@@ -202,40 +203,49 @@ updated_at: 2025-11-17
 ---
 
 tools:
-  - github-cli
+
+- github-cli
+
 # TODO: Create agent-creation-checklist.md for validation (follow-up story needed)
+
 # checklists:
-#   - agent-creation-checklist.md
+
+# - agent-creation-checklist.md
+
 ---
 
 # Create Agent Task
 
 ## Purpose
+
 To create a new agent definition file following Synkra AIOS standards using the template system with progressive disclosure elicitation.
 
 ## Prerequisites
+
 - User authorization verified
 - Template system initialized
 - Component generator available
 - Memory layer client initialized
 
 ## Implementation Method
+
 This task now uses the enhanced template system with progressive disclosure:
 
 ```javascript
 const ComponentGenerator = require('../scripts/component-generator');
 const generator = new ComponentGenerator({
-  rootPath: process.cwd()
+  rootPath: process.cwd(),
 });
 
 // Generate agent using elicitation workflow
 const result = await generator.generateComponent('agent', {
-  saveSession: true,  // Save progress
-  force: false        // Don't overwrite existing
+  saveSession: true, // Save progress
+  force: false, // Don't overwrite existing
 });
 ```
 
 ## Interactive Elicitation Process
+
 The elicitation workflow is now handled by `aios-core/elicitation/agent-elicitation.js` with:
 
 1. **Basic Agent Information** - Name, title, icon, usage
@@ -246,6 +256,7 @@ The elicitation workflow is now handled by `aios-core/elicitation/agent-elicitat
 6. **Advanced Options** - Memory layer, principles, activation
 
 ### Progressive Disclosure Features:
+
 - **Smart Defaults**: Auto-generates values based on previous answers
 - **Contextual Help**: Shows help text for complex steps
 - **Conditional Steps**: Shows/hides steps based on choices
@@ -277,6 +288,7 @@ The elicitation workflow is now handled by `aios-core/elicitation/agent-elicitat
    - Set appropriate file permissions
 
 5. **Update Memory Layer**
+
    ```javascript
    await memoryClient.addMemory({
      type: 'agent_created',
@@ -286,8 +298,8 @@ The elicitation workflow is now handled by `aios-core/elicitation/agent-elicitat
      timestamp: new Date().toISOString(),
      metadata: {
        role: agentRole,
-       commands: agentCommands
-     }
+       commands: agentCommands,
+     },
    });
    ```
 
@@ -297,6 +309,7 @@ The elicitation workflow is now handled by `aios-core/elicitation/agent-elicitat
    - Document in project changelog
 
 ## Validation Checklist
+
 - [ ] Agent name is unique and valid
 - [ ] All required sections included
 - [ ] YAML syntax is valid
@@ -306,12 +319,14 @@ The elicitation workflow is now handled by `aios-core/elicitation/agent-elicitat
 - [ ] File created successfully
 
 ## Error Handling
+
 - If agent already exists: Prompt for different name or update existing
 - If validation fails: Show specific errors and allow correction
 - If file write fails: Check permissions and path
 - If memory update fails: Log error but continue (non-blocking)
 
 ## Success Output
+
 ```
 ✅ Agent '{agent-name}' created successfully!
 📁 Location: .aios-core/agents/{agent-name}.md
@@ -319,4 +334,4 @@ The elicitation workflow is now handled by `aios-core/elicitation/agent-elicitat
    1. Run *update-manifest to add agent to team
    2. Test agent with /{agent-name} command
    3. Create any needed task dependencies
-``` 
+```

@@ -203,11 +203,14 @@ updated_at: 2025-11-17
  Powered by AIOS™ Core -->
 
 ---
+
 tools:
-  - github-cli        # PR review and quality gate management
-  - context7          # Research testing best practices and standards
-checklists:
-  - qa-master-checklist.md
+
+- github-cli # PR review and quality gate management
+- context7 # Research testing best practices and standards
+  checklists:
+- qa-master-checklist.md
+
 ---
 
 # qa-gate
@@ -371,4 +374,3 @@ Gate: CONCERNS → qa.qaLocation/gates/{epic}.{story}-{slug}.yml
 - Always write to standard path
 - Always update story with gate reference
 - Clear, actionable findings
- 

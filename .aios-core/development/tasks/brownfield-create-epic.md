@@ -29,7 +29,6 @@ Create a single epic for smaller brownfield enhancements that don't require the 
 - Significant integration work is required
 - Risk assessment and mitigation planning is necessary
 
-
 ## Configuration Dependencies
 
 This task requires the following configuration keys from `core-config.yaml`:
@@ -40,6 +39,7 @@ This task requires the following configuration keys from `core-config.yaml`:
 - **`architectureShardedLocation`**: Location for sharded architecture documents (typically docs/architecture) - Required to read/write architecture documentation
 
 **Loading Config:**
+
 ```javascript
 const yaml = require('js-yaml');
 const fs = require('fs');
@@ -106,6 +106,7 @@ List 1-3 focused stories that complete the epic, including predicted quality gat
 **Story Structure with Quality Predictions:**
 
 Each story should include:
+
 - Story title and brief description
 - Predicted specialized agents (based on story type)
 - Quality gates (Pre-Commit, Pre-PR, Pre-Deployment if applicable)
@@ -155,6 +156,7 @@ When breaking down epic into stories, predict agents based on:
 - **HIGH RISK Stories**: Consider feature flags and phased rollout
 
 This quality planning during epic creation ensures:
+
 - Story creators know which agents to consult
 - Quality gates are planned upfront, not retrofitted
 - Risk-appropriate validation is built into each story
@@ -202,6 +204,7 @@ Proactive quality validation reduces risk to existing systems:
 **Example Quality Risk Mitigation:**
 
 For an epic adding payment processing:
+
 - Risk: Breaking existing checkout flow
 - Quality Mitigation:
   - @db-sage reviews schema changes for payment tables
@@ -255,16 +258,19 @@ Once the epic is validated, provide this handoff to the Story Manager:
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -432,6 +438,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -450,7 +457,6 @@ updated_at: 2025-11-17
 ```
 
 ---
-
 
 **Story Manager Handoff:**
 
@@ -483,4 +489,3 @@ The epic creation is successful when:
 - If the scope grows beyond 3 stories, consider the full brownfield PRD process
 - Always prioritize existing system integrity over new functionality
 - When in doubt about scope or complexity, escalate to full brownfield planning
- 

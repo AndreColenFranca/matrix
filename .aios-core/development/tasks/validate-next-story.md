@@ -182,6 +182,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -202,10 +203,12 @@ updated_at: 2025-11-17
 ---
 
 tools:
-  - github-cli        # Validate repository structure and file paths
-  - context7          # Verify technical specifications and patterns
-checklists:
-  - po-master-checklist.md
+
+- github-cli # Validate repository structure and file paths
+- context7 # Verify technical specifications and patterns
+  checklists:
+- po-master-checklist.md
+
 ---
 
 # Validate Next Story Task
@@ -290,6 +293,7 @@ To comprehensively validate a story draft before implementation begins, ensuring
 **CONDITIONAL STEP** - Check `coderabbit_integration.enabled` in core-config.yaml
 
 **IF `coderabbit_integration.enabled: false`:**
+
 - SKIP this entire step
 - Verify the story contains the skip notice in the CodeRabbit Integration section:
   > **CodeRabbit Integration**: Disabled
@@ -297,18 +301,22 @@ To comprehensively validate a story draft before implementation begins, ensuring
 - Proceed to Step 9
 
 **IF `coderabbit_integration.enabled: true`:**
+
 - Validate ALL of the following:
 
 **Section Presence:**
+
 - Is the `🤖 CodeRabbit Integration` section present?
 - Are all subsections populated (Story Type Analysis, Specialized Agents, Quality Gates, Self-Healing, Focus Areas)?
 
 **Story Type Analysis:**
+
 - Is the primary story type correctly identified?
 - Does the complexity level match the story scope?
 - Are secondary types listed if applicable?
 
 **Specialized Agent Assignment:**
+
 - Is @dev listed as primary agent (required for all stories)?
 - Are type-specific agents assigned appropriately?
   - Database stories → @db-sage
@@ -317,12 +325,14 @@ To comprehensively validate a story draft before implementation begins, ensuring
   - Security stories → @architect
 
 **Quality Gate Tasks:**
+
 - Are all applicable quality gates defined as checkboxes?
 - Pre-Commit (@dev) - REQUIRED for all stories
 - Pre-PR (@github-devops) - Required if PR will be created
 - Pre-Deployment (@github-devops) - Required for production stories
 
 **Self-Healing Configuration (Story 6.3.3):**
+
 - Is the self-healing configuration present?
 - Does the mode match the primary agent?
   - @dev: light mode (2 iterations, 15 min, CRITICAL only)
@@ -331,6 +341,7 @@ To comprehensively validate a story draft before implementation begins, ensuring
 - Is the severity behavior documented?
 
 **Focus Areas:**
+
 - Do focus areas match the story type?
 - Are type-specific validations listed?
   - Database: service filters, schema compliance, RLS
@@ -338,6 +349,7 @@ To comprehensively validate a story draft before implementation begins, ensuring
   - Frontend: accessibility, performance, responsive
 
 **Validation Result:**
+
 - [ ] PASS: CodeRabbit section complete and accurate
 - [ ] PARTIAL: Section present but incomplete
 - [ ] FAIL: Section missing or critically incomplete
@@ -420,4 +432,3 @@ Provide a structured validation report including:
 - **NO-GO**: Story requires fixes before implementation
 - **Implementation Readiness Score**: 1-10 scale
 - **Confidence Level**: High/Medium/Low for successful implementation
- 

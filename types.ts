@@ -1,9 +1,8 @@
-
 export enum Quadrant {
-  DO = 'DO',             // Urgent & Important
+  DO = 'DO', // Urgent & Important
   SCHEDULE = 'SCHEDULE', // Not Urgent & Important
   DELEGATE = 'DELEGATE', // Urgent & Not Important
-  ELIMINATE = 'ELIMINATE' // Not Urgent & Not Important
+  ELIMINATE = 'ELIMINATE', // Not Urgent & Not Important
 }
 
 export interface Task {

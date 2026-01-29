@@ -182,6 +182,7 @@ token_usage: ~800-2,500 tokens
 ```
 
 **Optimization Notes:**
+
 - Validate configuration early; use atomic writes; implement rollback checkpoints
 
 ---
@@ -202,7 +203,9 @@ updated_at: 2025-11-17
 ---
 
 checklists:
-  - change-checklist.md
+
+- change-checklist.md
+
 ---
 
 # Modify Workflow Task
@@ -235,6 +238,7 @@ To safely modify existing workflow definitions while maintaining their orchestra
 ### 2. Dependency and Impact Analysis
 
 Analyze workflow connections:
+
 - Which agents are orchestrated by this workflow
 - What artifacts are produced/consumed
 - Phase transition dependencies
@@ -244,6 +248,7 @@ Analyze workflow connections:
 ### 3. Modification Intent Processing
 
 If user provides high-level intent (e.g., "add code review phase"):
+
 - Analyze current phase flow
 - Determine optimal insertion point
 - Identify required agents for new phase
@@ -251,6 +256,7 @@ If user provides high-level intent (e.g., "add code review phase"):
 - Ensure phase transitions remain logical
 
 If user provides specific changes:
+
 - Validate YAML structure changes
 - Ensure phase sequencing remains valid
 - Check agent availability
@@ -260,23 +266,24 @@ If user provides specific changes:
 ### 4. Phase Sequencing Validation
 
 Ensure modifications maintain valid flow:
+
 ```yaml
 phases:
   planning:
     sequence: 1
     agents: [analyst, pm]
     artifacts: [project-brief, prd]
-    
+
   # New phase insertion
-  architecture_review:  # NEW
-    sequence: 1.5      # Inserted between planning and architecture
+  architecture_review: # NEW
+    sequence: 1.5 # Inserted between planning and architecture
     agents: [architect, qa]
     artifacts: [architecture-review-doc]
-    entry_criteria: ["PRD approved"]
-    exit_criteria: ["Architecture review complete"]
-    
+    entry_criteria: ['PRD approved']
+    exit_criteria: ['Architecture review complete']
+
   architecture:
-    sequence: 2  # Adjusted from 2
+    sequence: 2 # Adjusted from 2
     agents: [architect]
     artifacts: [architecture-doc]
 ```
@@ -284,6 +291,7 @@ phases:
 ### 5. Mermaid Diagram Update
 
 If workflow contains visualization:
+
 ```mermaid
 graph TD
     A[Planning] --> AR[Architecture Review]  %% NEW
@@ -296,6 +304,7 @@ Update diagram to reflect new phases and transitions.
 ### 6. Generate Modification Diff
 
 Create comprehensive diff:
+
 ```diff
 @@ Workflow: {workflow-name} @@
 --- Current Version
@@ -311,7 +320,7 @@ Create comprehensive diff:
   planning:
     sequence: 1
     agents: [analyst, pm]
-    
+
 + code_review:
 +   sequence: 3.5
 +   agents: [qa, senior-dev]
@@ -331,6 +340,7 @@ Create comprehensive diff:
 ### 7. Validation Pipeline
 
 Comprehensive validation checks:
+
 - YAML syntax validation
 - Phase sequence continuity (no gaps)
 - Agent existence verification
@@ -342,6 +352,7 @@ Comprehensive validation checks:
 ### 8. Workflow Simulation
 
 Simulate the modified workflow:
+
 ```
 Phase Flow Simulation:
 1. Planning (analyst, pm) → project-brief, prd ✓
@@ -359,6 +370,7 @@ No circular dependencies ✓
 ### 9. User Approval Flow
 
 Present comprehensive report:
+
 1. Summary of changes
 2. Visual diff of YAML
 3. Updated phase flow diagram
@@ -374,6 +386,7 @@ Request explicit approval before applying changes.
 ### 10. Apply Modifications
 
 Upon approval:
+
 1. Write modified YAML to workflow file
 2. Update Mermaid diagrams if present
 3. Create git commit with descriptive message
@@ -384,6 +397,7 @@ Upon approval:
 ### 11. Post-Modification Validation
 
 Verify workflow functionality:
+
 - Load modified workflow in orchestrator
 - Validate all phases resolve correctly
 - Check agent assignments are valid
@@ -393,6 +407,7 @@ Verify workflow functionality:
 ### 12. Rollback Capability
 
 If issues detected:
+
 1. Restore from timestamped backup
 2. Revert git commit
 3. Refresh orchestrator cache
@@ -463,4 +478,4 @@ Workflow ready for use with enhanced orchestration.
 - Uses `yaml-validator.js` for syntax checking
 - Integrates with `git-wrapper.js` for version control
 - Coordinates with orchestrator for validation
-- Leverages `dependency-analyzer.js` for impact analysis 
+- Leverages `dependency-analyzer.js` for impact analysis

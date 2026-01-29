@@ -12,6 +12,7 @@
 ### Logo Inspiration
 
 The AIOS color palette is derived from the brand logo's vibrant gradient:
+
 - **Top gradient:** Magenta → Pink → Orange → Yellow
 - **Bottom gradient:** Purple → Blue → Cyan
 
@@ -25,37 +26,37 @@ The primary purple color (#8B5CF6) references **ClickUp's brand purple**, establ
 
 ### Brand Colors
 
-| Color | Hex | Chalk Variable | Usage |
-|-------|-----|----------------|-------|
-| **Primary Purple** | `#8B5CF6` | `chalk.hex('#8B5CF6')` | Main questions, headers, CTAs, branding |
-| **Secondary Magenta** | `#EC4899` | `chalk.hex('#EC4899')` | Important highlights, special emphasis |
-| **Tertiary Blue** | `#3B82F6` | `chalk.hex('#3B82F6')` | Secondary actions, links, info accents |
+| Color                 | Hex       | Chalk Variable         | Usage                                   |
+| --------------------- | --------- | ---------------------- | --------------------------------------- |
+| **Primary Purple**    | `#8B5CF6` | `chalk.hex('#8B5CF6')` | Main questions, headers, CTAs, branding |
+| **Secondary Magenta** | `#EC4899` | `chalk.hex('#EC4899')` | Important highlights, special emphasis  |
+| **Tertiary Blue**     | `#3B82F6` | `chalk.hex('#3B82F6')` | Secondary actions, links, info accents  |
 
 ### Functional Colors
 
-| Color | Hex | Chalk Variable | Usage |
-|-------|-----|----------------|-------|
-| **Success Green** | `#10B981` | `chalk.hex('#10B981')` | Checkmarks, completed steps, success messages |
-| **Warning Orange** | `#F59E0B` | `chalk.hex('#F59E0B')` | Warnings, confirmations, caution states |
-| **Error Red** | `#EF4444` | `chalk.hex('#EF4444')` | Errors, critical alerts, validation failures |
-| **Info Cyan** | `#06B6D4` | `chalk.hex('#06B6D4')` | Info messages, tips, helper text |
+| Color              | Hex       | Chalk Variable         | Usage                                         |
+| ------------------ | --------- | ---------------------- | --------------------------------------------- |
+| **Success Green**  | `#10B981` | `chalk.hex('#10B981')` | Checkmarks, completed steps, success messages |
+| **Warning Orange** | `#F59E0B` | `chalk.hex('#F59E0B')` | Warnings, confirmations, caution states       |
+| **Error Red**      | `#EF4444` | `chalk.hex('#EF4444')` | Errors, critical alerts, validation failures  |
+| **Info Cyan**      | `#06B6D4` | `chalk.hex('#06B6D4')` | Info messages, tips, helper text              |
 
 ### Neutral Colors
 
-| Color | Hex | Chalk Variable | Usage |
-|-------|-----|----------------|-------|
-| **Muted Gray** | `#94A3B8` | `chalk.hex('#94A3B8')` | Subtle text, disabled states |
-| **Dim Gray** | `#64748B` | `chalk.hex('#64748B')` | Secondary text, muted content |
+| Color          | Hex       | Chalk Variable         | Usage                         |
+| -------------- | --------- | ---------------------- | ----------------------------- |
+| **Muted Gray** | `#94A3B8` | `chalk.hex('#94A3B8')` | Subtle text, disabled states  |
+| **Dim Gray**   | `#64748B` | `chalk.hex('#64748B')` | Secondary text, muted content |
 
 ### Gradient Palette
 
 For special effects, animations, and branding moments:
 
-| Position | Hex | Chalk Variable | Visual |
-|----------|-----|----------------|--------|
-| **Start** | `#EC4899` | `chalk.hex('#EC4899')` | Magenta (logo top) |
-| **Middle** | `#8B5CF6` | `chalk.hex('#8B5CF6')` | Purple (brand) |
-| **End** | `#3B82F6` | `chalk.hex('#3B82F6')` | Blue (logo bottom) |
+| Position   | Hex       | Chalk Variable         | Visual             |
+| ---------- | --------- | ---------------------- | ------------------ |
+| **Start**  | `#EC4899` | `chalk.hex('#EC4899')` | Magenta (logo top) |
+| **Middle** | `#8B5CF6` | `chalk.hex('#8B5CF6')` | Purple (brand)     |
+| **End**    | `#3B82F6` | `chalk.hex('#3B82F6')` | Blue (logo bottom) |
 
 ---
 
@@ -69,31 +70,31 @@ const chalk = require('chalk');
 // AIOS Color Palette v2.1
 const colors = {
   // Core Brand Colors
-  primary: chalk.hex('#8B5CF6'),      // ClickUp-inspired purple
-  secondary: chalk.hex('#EC4899'),    // Magenta accent
-  tertiary: chalk.hex('#3B82F6'),     // Blue accent
-  
+  primary: chalk.hex('#8B5CF6'), // ClickUp-inspired purple
+  secondary: chalk.hex('#EC4899'), // Magenta accent
+  tertiary: chalk.hex('#3B82F6'), // Blue accent
+
   // Functional Colors
-  success: chalk.hex('#10B981'),      // Green
-  warning: chalk.hex('#F59E0B'),      // Orange
-  error: chalk.hex('#EF4444'),        // Red
-  info: chalk.hex('#06B6D4'),         // Cyan
-  
+  success: chalk.hex('#10B981'), // Green
+  warning: chalk.hex('#F59E0B'), // Orange
+  error: chalk.hex('#EF4444'), // Red
+  info: chalk.hex('#06B6D4'), // Cyan
+
   // Neutral Colors
-  muted: chalk.hex('#94A3B8'),        // Light gray
-  dim: chalk.hex('#64748B'),          // Dark gray
-  
+  muted: chalk.hex('#94A3B8'), // Light gray
+  dim: chalk.hex('#64748B'), // Dark gray
+
   // Gradient System
   gradient: {
-    start: chalk.hex('#EC4899'),      // Magenta
-    middle: chalk.hex('#8B5CF6'),     // Purple
-    end: chalk.hex('#3B82F6')         // Blue
+    start: chalk.hex('#EC4899'), // Magenta
+    middle: chalk.hex('#8B5CF6'), // Purple
+    end: chalk.hex('#3B82F6'), // Blue
   },
-  
+
   // Semantic Shortcuts
   highlight: chalk.hex('#EC4899').bold,
   brandPrimary: chalk.hex('#8B5CF6').bold,
-  brandSecondary: chalk.hex('#06B6D4')
+  brandSecondary: chalk.hex('#06B6D4'),
 };
 
 module.exports = colors;
@@ -104,22 +105,22 @@ module.exports = colors;
 ```css
 :root {
   /* Brand Colors */
-  --aios-primary: #8B5CF6;
-  --aios-secondary: #EC4899;
-  --aios-tertiary: #3B82F6;
-  
+  --aios-primary: #8b5cf6;
+  --aios-secondary: #ec4899;
+  --aios-tertiary: #3b82f6;
+
   /* Functional Colors */
-  --aios-success: #10B981;
-  --aios-warning: #F59E0B;
-  --aios-error: #EF4444;
-  --aios-info: #06B6D4;
-  
+  --aios-success: #10b981;
+  --aios-warning: #f59e0b;
+  --aios-error: #ef4444;
+  --aios-info: #06b6d4;
+
   /* Neutral Colors */
-  --aios-muted: #94A3B8;
-  --aios-dim: #64748B;
-  
+  --aios-muted: #94a3b8;
+  --aios-dim: #64748b;
+
   /* Gradient */
-  --aios-gradient: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%);
+  --aios-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
 }
 ```
 
@@ -141,14 +142,14 @@ module.exports = {
           info: '#06B6D4',
           muted: '#94A3B8',
           dim: '#64748B',
-        }
+        },
       },
       backgroundImage: {
         'aios-gradient': 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%)',
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};
 ```
 
 ---
@@ -158,6 +159,7 @@ module.exports = {
 ### Visual Hierarchy
 
 **Level 1: Brand Emphasis**
+
 - Use `colors.brandPrimary` (purple bold) for AIOS branding
 - Example: Welcome screens, major section headers
 
@@ -166,14 +168,16 @@ console.log(colors.brandPrimary('🎉 AIOS v2.1 Installer'));
 ```
 
 **Level 2: Primary Content**
+
 - Use `colors.primary` (purple) for main questions and headers
 - Example: Wizard questions, menu options
 
 ```javascript
-message: colors.primary('Select your project type:')
+message: colors.primary('Select your project type:');
 ```
 
 **Level 3: Secondary Content**
+
 - Use `colors.info` (cyan) for supporting information
 - Example: Tips, helper text, additional context
 
@@ -182,6 +186,7 @@ console.log(colors.info('💡 Tip: You can change this later'));
 ```
 
 **Level 4: Feedback States**
+
 - Use semantic colors for user feedback
 - Examples:
   - Success: `colors.success('✓ Installation complete!')`
@@ -191,13 +196,14 @@ console.log(colors.info('💡 Tip: You can change this later'));
 ### Context-Specific Usage
 
 **Installer & Wizards:**
+
 ```javascript
 // Welcome
 console.log(colors.brandPrimary('\n🎉 Welcome to AIOS v2.1\n'));
-console.log(colors.info('Let\'s get your project set up...\n'));
+console.log(colors.info("Let's get your project set up...\n"));
 
 // Questions
-message: colors.primary('Select IDE:')
+message: colors.primary('Select IDE:');
 
 // Progress
 console.log(colors.info('⏳ Installing dependencies...'));
@@ -207,6 +213,7 @@ console.log(colors.success('\n✓ All done! Your AIOS project is ready.\n'));
 ```
 
 **Error Messages:**
+
 ```javascript
 // Validation error
 console.log(colors.error('✗ Invalid path'));
@@ -219,6 +226,7 @@ console.log(colors.error('Installation failed. Rolling back changes...'));
 ```
 
 **Status Indicators:**
+
 ```javascript
 // In progress
 console.log(colors.info('⏳ Configuring environment...'));
@@ -234,13 +242,14 @@ console.log(colors.muted('⊘ CodeRabbit setup skipped'));
 ```
 
 **Interactive Prompts:**
+
 ```javascript
 const answer = await inquirer.prompt([
   {
     type: 'confirm',
     name: 'overwrite',
     message: colors.warning('File exists. Overwrite?'),
-    default: false
+    default: false,
   },
   {
     type: 'list',
@@ -249,9 +258,9 @@ const answer = await inquirer.prompt([
     choices: [
       { name: colors.highlight('Cursor') + colors.dim(' (recommended)'), value: 'cursor' },
       { name: 'Windsurf', value: 'windsurf' },
-      { name: 'VS Code', value: 'vscode' }
-    ]
-  }
+      { name: 'VS Code', value: 'vscode' },
+    ],
+  },
 ]);
 ```
 
@@ -263,24 +272,26 @@ const answer = await inquirer.prompt([
 
 All colors have been tested for contrast ratios against both dark and light terminal backgrounds:
 
-| Color Pair | Contrast Ratio | WCAG Level |
-|------------|----------------|------------|
-| Purple on Black | 7.2:1 | AAA |
-| Magenta on Black | 6.8:1 | AAA |
-| Blue on Black | 5.1:1 | AA |
-| Green on Black | 8.4:1 | AAA |
-| Orange on Black | 6.2:1 | AAA |
-| Red on Black | 5.6:1 | AA |
-| Cyan on Black | 7.9:1 | AAA |
+| Color Pair       | Contrast Ratio | WCAG Level |
+| ---------------- | -------------- | ---------- |
+| Purple on Black  | 7.2:1          | AAA        |
+| Magenta on Black | 6.8:1          | AAA        |
+| Blue on Black    | 5.1:1          | AA         |
+| Green on Black   | 8.4:1          | AAA        |
+| Orange on Black  | 6.2:1          | AAA        |
+| Red on Black     | 5.6:1          | AA         |
+| Cyan on Black    | 7.9:1          | AAA        |
 
 ### Terminal Compatibility
 
 **Chalk automatically handles:**
+
 - Color support detection (256-color, 16-color, no-color terminals)
 - Graceful degradation on unsupported terminals
 - Forced color modes (via environment variables)
 
 **Best Practices:**
+
 - Always provide text-based indicators in addition to color (✓, ✗, ⚠️)
 - Use bold/dim variants for additional emphasis
 - Test on various terminal emulators (Windows Terminal, iTerm2, GNOME Terminal)
@@ -332,9 +343,9 @@ For future design system integration:
 
 ## 📝 Version History
 
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 2.1.0 | 2025-01-20 | Initial AIOS Color Palette - Logo-inspired gradient + ClickUp purple | Uma (UX-Design Expert) |
+| Version | Date       | Changes                                                              | Author                 |
+| ------- | ---------- | -------------------------------------------------------------------- | ---------------------- |
+| 2.1.0   | 2025-01-20 | Initial AIOS Color Palette - Logo-inspired gradient + ClickUp purple | Uma (UX-Design Expert) |
 
 ---
 
@@ -351,4 +362,3 @@ For future design system integration:
 **Status:** ✅ Ready for Implementation
 
 — Uma, desenhando com empatia 💝
-

@@ -10,6 +10,7 @@ interface UseTasksResult {
   addTask: (text: string, quadrant: Quadrant) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   clearAllTasks: () => Promise<void>;
+  updateTask: (id: string, quadrant: Quadrant) => Promise<void>;
 }
 
 export const useTasks = (): UseTasksResult => {
@@ -89,15 +90,15 @@ export const useTasks = (): UseTasksResult => {
       try {
         setError(null);
 
-        const { error: insertError } = await supabase.from('tasks').insert([
-          {
-            user_id: user.id,
-            text,
-            quadrant,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-        ]);
+        const taskData = {
+          user_id: user.id,
+          text,
+          quadrant,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        const { error: insertError } = await (supabase.from('tasks').insert([taskData]) as any);
 
         if (insertError) throw insertError;
       } catch (err: any) {
@@ -147,10 +148,7 @@ export const useTasks = (): UseTasksResult => {
     try {
       setError(null);
 
-      const { error: deleteError } = await supabase
-        .from('tasks')
-        .delete()
-        .eq('user_id', user.id);
+      const { error: deleteError } = await supabase.from('tasks').delete().eq('user_id', user.id);
 
       if (deleteError) throw deleteError;
     } catch (err: any) {
@@ -177,14 +175,16 @@ export const useTasks = (): UseTasksResult => {
           )
         );
 
-        const { error: updateError } = await supabase
+        const updateData = {
+          quadrant,
+          updated_at: new Date().toISOString(),
+        };
+
+        const { error: updateError } = await (supabase
           .from('tasks')
-          .update({
-            quadrant,
-            updated_at: new Date().toISOString(),
-          })
+          .update(updateData)
           .eq('id', id)
-          .eq('user_id', user.id);
+          .eq('user_id', user.id) as any);
 
         if (updateError) throw updateError;
       } catch (err: any) {

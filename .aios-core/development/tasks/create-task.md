@@ -182,6 +182,7 @@ token_usage: ~800-2,500 tokens
 ```
 
 **Optimization Notes:**
+
 - Validate configuration early; use atomic writes; implement rollback checkpoints
 
 ---
@@ -202,18 +203,25 @@ updated_at: 2025-11-17
 ---
 
 tools:
-  - github-cli
+
+- github-cli
+
 # TODO: Create task-validation-checklist.md for validation (follow-up story needed)
+
 # checklists:
-#   - task-validation-checklist.md
+
+# - task-validation-checklist.md
+
 ---
 
 # Create Task
 
 ## Purpose
+
 To create a new task file that defines executable workflows for agents, with proper structure, elicitation steps, and validation.
 
 ## Prerequisites
+
 - User authorization verified
 - Task purpose clearly defined
 - Understanding of task workflow requirements
@@ -221,6 +229,7 @@ To create a new task file that defines executable workflows for agents, with pro
 ## Interactive Elicitation Process
 
 ### Step 1: Task Definition
+
 ```
 ELICIT: Task Basic Information
 
@@ -248,11 +257,13 @@ ELICIT: Task Basic Information
 ```
 
 **NAMING CONVENTION (CRITICAL):**
+
 - Agent-specific tasks: `{agent-id}-{task-name}.md`
 - Shared tasks: `{task-name}.md` (no prefix)
 - Use component-generator.applyNamingConvention() to apply automatically
 
 ### Step 2: Task Workflow
+
 ```
 ELICIT: Task Workflow Steps
 1. Does this task require user interaction? (yes/no)
@@ -263,6 +274,7 @@ ELICIT: Task Workflow Steps
 ```
 
 ### Step 3: Elicitation Requirements
+
 ```
 ELICIT: Interactive Elements (if applicable)
 1. What information needs to be collected from users?
@@ -272,6 +284,7 @@ ELICIT: Interactive Elements (if applicable)
 ```
 
 ### Step 4: Dependencies and Integration
+
 ```
 ELICIT: Task Dependencies
 1. Does this task depend on other tasks?
@@ -288,28 +301,36 @@ ELICIT: Task Dependencies
    - Ensure descriptive and clear naming
 
 2. **Structure Task Content**
+
    ```markdown
    # {Task Title}
-   
+
    ## Purpose
+
    {Clear description of what the task accomplishes}
-   
+
    ## Prerequisites
+
    {List of requirements before task execution}
-   
+
    ## Interactive Elicitation Process
+
    {If elicit=true, define all prompts and user interactions}
-   
+
    ## Implementation Steps
+
    {Numbered steps for task execution}
-   
+
    ## Validation Checklist
+
    {Checklist items to verify task completion}
-   
+
    ## Error Handling
+
    {How to handle common errors}
-   
+
    ## Success Output
+
    {What user sees on successful completion}
    ```
 
@@ -325,6 +346,7 @@ ELICIT: Task Dependencies
    - Ensure proper markdown structure
 
 5. **Update Memory Layer**
+
    ```javascript
    await memoryClient.addMemory({
      type: 'task_created',
@@ -335,8 +357,8 @@ ELICIT: Task Dependencies
      metadata: {
        purpose: taskPurpose,
        agents: associatedAgents,
-       interactive: hasElicitation
-     }
+       interactive: hasElicitation,
+     },
    });
    ```
 
@@ -346,6 +368,7 @@ ELICIT: Task Dependencies
    - Document expected outputs
 
 ## Validation Checklist
+
 - [ ] Task name is unique and valid
 - [ ] Purpose clearly stated
 - [ ] Steps are numbered and clear
@@ -355,12 +378,14 @@ ELICIT: Task Dependencies
 - [ ] Memory layer updated
 
 ## Error Handling
+
 - If task exists: Offer to update or create variant
 - If validation fails: Show specific issues
 - If dependencies missing: List required files
 - If write fails: Check permissions
 
 ## Success Output
+
 ```
 ✅ Task '{task-name}' created successfully!
 📁 Location: .aios-core/tasks/{task-name}.md
@@ -369,4 +394,4 @@ ELICIT: Task Dependencies
      tasks:
        - {task-name}.md
 🔗 Agents using this task: {agent-list}
-``` 
+```

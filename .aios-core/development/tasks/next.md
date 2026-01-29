@@ -8,7 +8,7 @@ Suggest next commands based on current workflow context using the Workflow Intel
 
 ```yaml
 task: next()
-agent: "@dev"
+agent: '@dev'
 responsável: Dex (Developer)
 responsavel_type: Agente
 atomic_layer: Workflow
@@ -69,6 +69,7 @@ pre-conditions:
 ## Implementation Steps
 
 ### Step 1: Check Help Flag
+
 ```javascript
 if (args.help) {
   displayHelp();
@@ -77,18 +78,20 @@ if (args.help) {
 ```
 
 ### Step 2: Build Context
+
 ```javascript
 const SuggestionEngine = require('.aios-core/workflow-intelligence/engine/suggestion-engine');
 const engine = new SuggestionEngine();
 
 // Build context from multiple sources
 const context = await engine.buildContext({
-  storyOverride: args.story,    // Explicit story path (optional)
-  autoDetect: true              // Auto-detect from session/git
+  storyOverride: args.story, // Explicit story path (optional)
+  autoDetect: true, // Auto-detect from session/git
 });
 ```
 
 ### Step 3: Get Suggestions
+
 ```javascript
 const result = await engine.suggestNext(context);
 
@@ -104,6 +107,7 @@ const result = await engine.suggestNext(context);
 ```
 
 ### Step 4: Format Output
+
 ```javascript
 const formatter = require('.aios-core/workflow-intelligence/engine/output-formatter');
 
@@ -111,7 +115,12 @@ const formatter = require('.aios-core/workflow-intelligence/engine/output-format
 const displaySuggestions = args.all ? result.suggestions : result.suggestions.slice(0, 3);
 
 // Display formatted output
-formatter.displaySuggestions(result.workflow, result.currentState, result.confidence, displaySuggestions);
+formatter.displaySuggestions(
+  result.workflow,
+  result.currentState,
+  result.confidence,
+  displaySuggestions
+);
 ```
 
 ---
@@ -151,6 +160,7 @@ Workflow detection uses:
 ## Output Format
 
 ### Standard Output
+
 ```
 🧭 Workflow: story_development
 📍 State: in_development (confidence: 92%)
@@ -164,6 +174,7 @@ Type a number to execute, or press Enter to continue manually.
 ```
 
 ### Low Confidence Output
+
 ```
 🧭 Workflow: unknown
 📍 State: uncertain (confidence: 35%)
@@ -176,6 +187,7 @@ Possible next steps (uncertain):
 ```
 
 ### No Workflow Match
+
 ```
 🧭 Workflow: none detected
 📍 State: N/A
@@ -211,14 +223,15 @@ post-conditions:
 
 ## Error Handling
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| WIS module not found | Missing dependency | Fallback to generic suggestions |
-| Session state corrupt | Invalid JSON | Clear session, show warning |
-| Story path invalid | File doesn't exist | Warning, use auto-detect |
-| No workflow match | Unknown command pattern | Show "unable to determine" message |
+| Error                 | Cause                   | Resolution                         |
+| --------------------- | ----------------------- | ---------------------------------- |
+| WIS module not found  | Missing dependency      | Fallback to generic suggestions    |
+| Session state corrupt | Invalid JSON            | Clear session, show warning        |
+| Story path invalid    | File doesn't exist      | Warning, use auto-detect           |
+| No workflow match     | Unknown command pattern | Show "unable to determine" message |
 
 **Error Recovery Strategy:**
+
 ```javascript
 try {
   const result = await engine.suggestNext(context);
@@ -280,7 +293,7 @@ optimizations:
 story: WIS-3
 version: 1.0.0
 created: 2025-12-25
-author: "@dev (Dex)"
+author: '@dev (Dex)'
 dependencies:
   modules:
     - workflow-intelligence (from WIS-2)

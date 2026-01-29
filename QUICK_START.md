@@ -21,6 +21,7 @@ The app now requires authentication and stores data in a cloud database instead 
    - Enable Realtime for `tasks` table in Supabase UI
 
 4. **Add Credentials**
+
    ```bash
    # Edit .env file:
    VITE_SUPABASE_URL=your_project_url
@@ -28,6 +29,7 @@ The app now requires authentication and stores data in a cloud database instead 
    ```
 
 5. **Install & Run**
+
    ```bash
    npm install
    npm run dev
@@ -41,14 +43,14 @@ The app now requires authentication and stores data in a cloud database instead 
 
 ## Key Changes from Old Version
 
-| Feature | Before | After |
-|---------|--------|-------|
-| Authentication | None | Email/password |
-| Data Storage | Browser localStorage | Cloud PostgreSQL |
-| Users | Single | Multi-user with isolation |
-| Sync | No | Realtime across tabs |
-| Persistence | Browser only | Cloud, any device |
-| Configuration | Settings modal only | Saved to database |
+| Feature        | Before               | After                     |
+| -------------- | -------------------- | ------------------------- |
+| Authentication | None                 | Email/password            |
+| Data Storage   | Browser localStorage | Cloud PostgreSQL          |
+| Users          | Single               | Multi-user with isolation |
+| Sync           | No                   | Realtime across tabs      |
+| Persistence    | Browser only         | Cloud, any device         |
+| Configuration  | Settings modal only  | Saved to database         |
 
 ## File Structure
 
@@ -79,21 +81,25 @@ matrix/
 ## Common Tasks
 
 ### Login Issues?
+
 - Check `.env` has `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
 - Verify Supabase project is created
 - Restart dev server after changing `.env`
 
 ### Tasks Not Saving?
+
 - Check RLS policies are created (SUPABASE_SETUP.md Step 4)
 - Look for errors in browser console
 - Verify you're logged in
 
 ### Realtime Not Working?
+
 - Confirm realtime is enabled for `tasks` table
 - Refresh the page
 - It only works for same user on same domain
 
 ### Need Full Details?
+
 → Read `SUPABASE_SETUP.md` for step-by-step instructions
 
 ## Architecture at a Glance
@@ -113,6 +119,7 @@ App.tsx ──────┤
 ## What's New
 
 ✨ **Features**:
+
 - Multi-user support with secure data isolation
 - Email/password authentication
 - Cloud data storage with automatic backups
@@ -120,11 +127,13 @@ App.tsx ──────┤
 - Per-user UAZAPI configuration
 
 🔒 **Security**:
+
 - Row Level Security (RLS) at database level
 - Session auto-refresh
 - Secure token storage in Supabase
 
 ⚡ **Performance**:
+
 - Indexed database queries
 - Realtime throttling (10 events/sec)
 - Optimized React rendering
@@ -139,6 +148,7 @@ App.tsx ──────┤
 ## Troubleshooting Command
 
 If something breaks:
+
 ```bash
 # Check everything is installed
 npm install
@@ -162,16 +172,16 @@ npm run dev
 
 ## Summary
 
-| Task | Status |
-|------|--------|
-| Supabase client setup | ✅ Complete |
-| Authentication system | ✅ Complete |
-| Database schema | ✅ Ready (manual setup) |
-| Data layer hooks | ✅ Complete |
-| UI updates | ✅ Complete |
-| Documentation | ✅ Complete |
-| Testing | ✅ Passed |
-| Commits | ✅ 2 commits |
+| Task                  | Status                  |
+| --------------------- | ----------------------- |
+| Supabase client setup | ✅ Complete             |
+| Authentication system | ✅ Complete             |
+| Database schema       | ✅ Ready (manual setup) |
+| Data layer hooks      | ✅ Complete             |
+| UI updates            | ✅ Complete             |
+| Documentation         | ✅ Complete             |
+| Testing               | ✅ Passed               |
+| Commits               | ✅ 2 commits            |
 
 **Ready to use!** Just set up your Supabase project and add credentials to `.env`.
 

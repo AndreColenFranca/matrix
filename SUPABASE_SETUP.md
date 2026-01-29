@@ -5,6 +5,7 @@ This document walks you through setting up the Eisenhower AI Matrix with Supabas
 ## Overview
 
 The Eisenhower AI Matrix has been refactored to use Supabase instead of localStorage. This provides:
+
 - **User Authentication** - Email/password based auth system
 - **Cloud Database** - PostgreSQL database for persistent task storage
 - **Multi-User Support** - Each user has isolated data with Row Level Security (RLS)
@@ -227,6 +228,7 @@ The app will open at `http://localhost:5173` and show the login screen.
 
 **Problem**: Error on app startup
 **Solution**:
+
 1. Check `.env` file exists in project root
 2. Verify `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are filled
 3. Values should NOT have quotes around them
@@ -236,6 +238,7 @@ The app will open at `http://localhost:5173` and show the login screen.
 
 **Problem**: Can't add/delete tasks, error about RLS
 **Solution**:
+
 1. Check Supabase RLS policies are created (Step 4)
 2. Verify you're logged in (`useAuth` returns a user)
 3. Check database policies in Supabase dashboard
@@ -244,6 +247,7 @@ The app will open at `http://localhost:5173` and show the login screen.
 
 **Problem**: Added task but it doesn't show
 **Solution**:
+
 1. Check browser console for errors
 2. Verify task was saved in Supabase > Table Editor > tasks
 3. Check your Supabase credentials are correct
@@ -253,6 +257,7 @@ The app will open at `http://localhost:5173` and show the login screen.
 
 **Problem**: Login/signup doesn't work
 **Solution**:
+
 1. Verify Supabase API credentials are correct
 2. Check browser console for error messages
 3. Make sure password is at least 6 characters
@@ -262,6 +267,7 @@ The app will open at `http://localhost:5173` and show the login screen.
 
 **Problem**: Changes in one tab don't appear in another
 **Solution**:
+
 1. Verify realtime is enabled for `tasks` table (Step 5)
 2. Check both tabs are on the same domain
 3. Try refreshing one tab
@@ -270,24 +276,26 @@ The app will open at `http://localhost:5173` and show the login screen.
 ## Database Structure
 
 ### tasks table
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Unique task ID |
-| user_id | UUID | User who owns the task |
-| text | TEXT | Task description |
-| quadrant | TEXT | DO, SCHEDULE, DELEGATE, ELIMINATE |
-| created_at | TIMESTAMPTZ | When task was created |
-| updated_at | TIMESTAMPTZ | Last update timestamp |
+
+| Column     | Type        | Description                       |
+| ---------- | ----------- | --------------------------------- |
+| id         | UUID        | Unique task ID                    |
+| user_id    | UUID        | User who owns the task            |
+| text       | TEXT        | Task description                  |
+| quadrant   | TEXT        | DO, SCHEDULE, DELEGATE, ELIMINATE |
+| created_at | TIMESTAMPTZ | When task was created             |
+| updated_at | TIMESTAMPTZ | Last update timestamp             |
 
 ### user_config table
-| Column | Type | Description |
-|--------|------|-------------|
-| user_id | UUID | User who owns the config |
-| uazapi_url | TEXT | UAZAPI endpoint URL |
-| uazapi_token | TEXT | UAZAPI authentication token |
-| uazapi_number | TEXT | WhatsApp destination number |
-| created_at | TIMESTAMPTZ | When config was created |
-| updated_at | TIMESTAMPTZ | Last update timestamp |
+
+| Column        | Type        | Description                 |
+| ------------- | ----------- | --------------------------- |
+| user_id       | UUID        | User who owns the config    |
+| uazapi_url    | TEXT        | UAZAPI endpoint URL         |
+| uazapi_token  | TEXT        | UAZAPI authentication token |
+| uazapi_number | TEXT        | WhatsApp destination number |
+| created_at    | TIMESTAMPTZ | When config was created     |
+| updated_at    | TIMESTAMPTZ | Last update timestamp       |
 
 ## Architecture
 

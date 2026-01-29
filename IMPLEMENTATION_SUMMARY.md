@@ -7,6 +7,7 @@ This document provides a technical overview of the Supabase integration for the 
 ## Architecture Changes
 
 ### Before (localStorage)
+
 - Single-user application
 - All data stored in browser localStorage
 - No authentication system
@@ -14,6 +15,7 @@ This document provides a technical overview of the Supabase integration for the 
 - No sync across tabs/devices
 
 ### After (Supabase)
+
 - Multi-user application with authentication
 - Data stored in cloud PostgreSQL database
 - Email/password authentication system
@@ -24,6 +26,7 @@ This document provides a technical overview of the Supabase integration for the 
 ## New Files Created
 
 ### Authentication Layer
+
 - **`contexts/AuthContext.tsx`** (110 lines)
   - Provides `useAuth()` hook
   - Manages auth state (user, session, loading)
@@ -39,6 +42,7 @@ This document provides a technical overview of the Supabase integration for the 
   - Styled with Tailwind CSS
 
 ### Data Layer
+
 - **`lib/supabaseClient.ts`** (20 lines)
   - Supabase client initialization
   - Auth config for session persistence
@@ -60,6 +64,7 @@ This document provides a technical overview of the Supabase integration for the 
   - Manages loading and error states
 
 ### Type Definitions
+
 - **`types/database.types.ts`** (50 lines)
   - TypeScript types for database schema
   - Task and UserConfig table definitions
@@ -69,6 +74,7 @@ This document provides a technical overview of the Supabase integration for the 
 ## Modified Files
 
 ### types.ts
+
 - Updated `Task` interface:
   - Added `user_id: string`
   - Changed `createdAt: number` → `created_at: string` (ISO format)
@@ -76,6 +82,7 @@ This document provides a technical overview of the Supabase integration for the 
 - Added `UserConfig` interface for UAZAPI settings
 
 ### App.tsx
+
 - Removed localStorage logic (35 lines)
 - Integrated `useAuth()` hook
 - Integrated `useTasks()` hook
@@ -88,13 +95,16 @@ This document provides a technical overview of the Supabase integration for the 
 - Updated config property names (e.g., `config.uazapi_token`)
 
 ### index.tsx
+
 - Wrapped App with `<AuthProvider>`
 - Maintains React strict mode
 
 ### package.json
+
 - Added `@supabase/supabase-js` dependency (v2.39+)
 
 ### .env and .env.example
+
 - Added `VITE_SUPABASE_URL` (prefixed for Vite)
 - Added `VITE_SUPABASE_ANON_KEY` (prefixed for Vite)
 - Added documentation comments
@@ -102,6 +112,7 @@ This document provides a technical overview of the Supabase integration for the 
 ## Database Schema
 
 ### tasks table
+
 ```sql
 CREATE TABLE public.tasks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -120,6 +131,7 @@ CREATE TRIGGER update_tasks_updated_at BEFORE UPDATE ON public.tasks
 ```
 
 ### user_config table
+
 ```sql
 CREATE TABLE public.user_config (
   user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -135,11 +147,13 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ```
 
 ### Row Level Security (RLS)
+
 - Policies ensure users can only access their own tasks and config
 - Enforced at database level (cannot be bypassed from client)
 - `auth.uid()` automatically matches authenticated user
 
 ### Realtime
+
 - tasks table has realtime enabled
 - Broadcasts INSERT, UPDATE, DELETE events
 - Clients subscribe and receive live updates
@@ -148,6 +162,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ## Data Structures
 
 ### Authentication State (AuthContext)
+
 ```typescript
 {
   user: User | null,           // Current authenticated user
@@ -161,6 +176,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ```
 
 ### Task State (useTasks)
+
 ```typescript
 {
   tasks: Task[],
@@ -173,6 +189,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ```
 
 ### Config State (useUserConfig)
+
 ```typescript
 {
   config: {
@@ -189,6 +206,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ## Key Features
 
 ### Authentication
+
 - ✅ Email/password signup
 - ✅ Email/password login
 - ✅ Automatic session persistence
@@ -196,6 +214,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 - ✅ Logout with session cleanup
 
 ### Data Management
+
 - ✅ Add task (saved to database immediately)
 - ✅ Delete task (removed from database)
 - ✅ Clear all tasks (bulk delete)
@@ -203,6 +222,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 - ✅ Per-user data isolation with RLS
 
 ### Realtime
+
 - ✅ Subscribe to task changes
 - ✅ INSERT event → new task appears
 - ✅ DELETE event → task disappears
@@ -210,6 +230,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 - ✅ Works across tabs and devices
 
 ### User Settings
+
 - ✅ Save UAZAPI token per user
 - ✅ Save WhatsApp number per user
 - ✅ Load settings on app start
@@ -217,6 +238,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 - ✅ Provide default values
 
 ### Error Handling
+
 - ✅ Auth errors with user-friendly messages
 - ✅ Network errors caught and displayed
 - ✅ RLS violations handled gracefully
@@ -226,6 +248,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ## Security Measures
 
 ### Row Level Security (RLS)
+
 - Users can only SELECT their own tasks
 - Users can only INSERT tasks with their user_id
 - Users can only UPDATE/DELETE their own tasks
@@ -233,12 +256,14 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 - Enforced server-side (cannot be bypassed)
 
 ### Environment Variables
+
 - Supabase URL and anon key in `.env`
 - `.env` in `.gitignore` (never committed)
 - Vite prefixes with `VITE_` for client exposure
 - Service role key NOT used in client (server-only)
 
 ### Session Management
+
 - Sessions auto-persist in localStorage
 - Tokens auto-refresh before expiry
 - Logout clears session
@@ -247,17 +272,20 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ## Performance Optimizations
 
 ### Database
+
 - Indexes on `user_id` and `created_at` for fast queries
 - RLS policies use indexed columns
 - Realtime limited to 10 events/second
 
 ### React
+
 - Custom hooks minimize re-renders
 - Callbacks memoized with `useCallback`
 - Effects properly dependency-managed
 - No unnecessary re-renders
 
 ### Realtime
+
 - Throttled to prevent overwhelming clients
 - Efficient delta updates (only changed data)
 - Subscription cleanup on unmount
@@ -265,12 +293,14 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ## Backwards Compatibility
 
 ⚠️ **Breaking Changes**:
+
 - localStorage tasks NOT automatically migrated
 - Users must create new account to use app
 - UAZAPI config must be re-entered after migration
 - Old task IDs (strings) incompatible with new UUIDs
 
 **Rationale**:
+
 - Cleaner architecture without legacy migration code
 - New users get cloud experience from day 1
 - Existing users knowingly created accounts
@@ -301,6 +331,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ## Common Development Tasks
 
 ### Add a new field to tasks
+
 1. Add to database schema (SQL migration)
 2. Update `types/database.types.ts`
 3. Update `Task` interface in `types.ts`
@@ -308,18 +339,21 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 5. Use new field in App.tsx or components
 
 ### Change authentication method (e.g., add social auth)
+
 1. Enable provider in Supabase dashboard
 2. Update `AuthContext.tsx` with new method
 3. Update `Login.tsx` UI
 4. Add provider button
 
 ### Add task sharing between users
+
 1. Create `task_shares` table in database
 2. Add RLS policy for shared tasks
 3. Update `useTasks` query to include shared tasks
 4. Add share button in UI
 
 ### Deploy to production
+
 1. Create Supabase project on production database
 2. Run same schema creation SQL
 3. Update `.env` with production credentials
@@ -329,6 +363,7 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 ## Metrics
 
 ### Code Changes
+
 - **New files**: 6 (AuthContext, Login, supabaseClient, 3 hooks + types)
 - **Modified files**: 5 (types, App, index, package.json, .env)
 - **Lines added**: ~600 (new functionality)
@@ -336,11 +371,13 @@ CREATE TRIGGER update_user_config_updated_at BEFORE UPDATE ON public.user_config
 - **Net change**: +565 lines
 
 ### Dependencies
+
 - Added: `@supabase/supabase-js` (v2.39+)
 - Removed: None
 - Total: 25 dependencies (up from 15)
 
 ### Performance
+
 - Build size: 866 KB minified (221 KB gzipped)
 - Chunk warning: Large bundle due to Supabase + Google Gemini dependencies
 - Load time: Unchanged (dependencies loaded from node_modules)

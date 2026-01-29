@@ -1,0 +1,54 @@
+name: sales-squad
+version: 1.0.0
+description: "Squad para gerenciar página de vendas de alianças"
+author: andre
+license: MIT
+domain: e-commerce-jewelry
+slashPrefix: sales
+
+aios:
+  minVersion: "2.1.0"
+  type: squad
+
+components:
+  agents:
+    - product-manager.md
+    - sales-agent.md
+    - payment-processor.md
+
+  tasks:
+    - product-manager-list-products.md
+    - product-manager-create-product.md
+    - product-manager-update-product.md
+    - product-manager-manage-promotions.md
+    - sales-agent-manage-cart.md
+    - sales-agent-apply-discount.md
+    - sales-agent-process-checkout.md
+    - sales-agent-create-order.md
+    - payment-processor-validate-card.md
+    - payment-processor-process-payment.md
+    - payment-processor-confirm-transaction.md
+    - payment-processor-handle-refund.md
+
+  workflows: []
+  checklists: []
+  templates: []
+  tools: []
+  scripts: []
+
+config:
+  extends: extend
+  coding-standards: config/coding-standards.md
+  tech-stack: config/tech-stack.md
+  source-tree: config/source-tree.md
+
+dependencies:
+  node: []
+  python: []
+  squads: []
+
+tags:
+  - e-commerce
+  - sales
+  - payment
+  - jewelry

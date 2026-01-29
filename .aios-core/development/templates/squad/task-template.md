@@ -1,6 +1,6 @@
 ---
-task: {{COMPONENTNAME}}
-responsavel: "@{{AGENTID}}"
+task: { { COMPONENTNAME } }
+responsavel: '@{{AGENTID}}'
 responsavel_type: Agent
 atomic_layer: Task
 elicit: false
@@ -10,7 +10,7 @@ Entrada:
     tipo: string
     origem: User Input
     obrigatorio: true
-    validacao: "Describe validation rules"
+    validacao: 'Describe validation rules'
 
 Saida:
   - campo: result
@@ -19,9 +19,9 @@ Saida:
     persistido: false
 
 Checklist:
-  - "[ ] Step 1: Describe first step"
-  - "[ ] Step 2: Describe second step"
-  - "[ ] Step 3: Describe third step"
+  - '[ ] Step 1: Describe first step'
+  - '[ ] Step 2: Describe second step'
+  - '[ ] Step 3: Describe third step'
 ---
 
 # {{COMPONENTNAME}}
@@ -31,11 +31,12 @@ Checklist:
 {{DESCRIPTION}}
 
 {{#IF STORYID}}
+
 ## Story Reference
 
 - **Story:** {{STORYID}}
 - **Squad:** {{SQUADNAME}}
-{{/IF}}
+  {{/IF}}
 
 ## Pre-Conditions
 
@@ -122,4 +123,4 @@ tags:
 
 ---
 
-*Task definition created by squad-creator*
+_Task definition created by squad-creator_
