@@ -1,0 +1,29 @@
+name: frontend-squad
+version: '2.1'
+title: Frontend Squad
+description: 'React UI/UX components, Tailwind styling, and responsive design for Eisenhower AI Matrix'
+
+metadata:
+  author: Craft (Squad Creator)
+  created: 2026-01-29
+  domain: frontend
+  status: active
+
+architecture:
+  components:
+    - type: agents
+      count: 2
+    - type: tasks
+      count: 8
+    - type: templates
+      count: 4
+    - type: checklists
+      count: 2
+
+technologies:
+  - React 19
+  - TypeScript
+  - Tailwind CSS
+  - Vite
+
+dependencies: []

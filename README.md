@@ -19,17 +19,20 @@ Uma ferramenta inteligente de priorização de tarefas que utiliza **Google Gemi
 ## Tecnologias
 
 ### Frontend
+
 - **React 19** - Framework UI declarativo
 - **TypeScript** - Type-safety e melhor DX
 - **Tailwind CSS** - Styling utilitário moderno
 - **Vite** - Build tool ultrarrápido
 
 ### Serviços
+
 - **Google Generative AI** - Gemini 3 Flash para categorização de tarefas
 - **Supabase** - Autenticação e banco de dados em tempo real
 - **UAZAPI** - Integração WhatsApp para envio de mensagens
 
 ### Qualidade de Código
+
 - **ESLint** - Linting com suporte React/TypeScript
 - **Prettier** - Formatação automática de código
 - **Vitest** - Testing framework de alta performance
@@ -87,6 +90,7 @@ npm run preview
 ## Scripts Disponíveis
 
 ### Desenvolvimento
+
 ```bash
 npm run dev          # Servidor de desenvolvimento com hot reload
 npm run build        # Build de produção
@@ -94,6 +98,7 @@ npm run preview      # Preview da build de produção
 ```
 
 ### Qualidade de Código
+
 ```bash
 npm run lint         # Verificar estilo de código
 npm run lint:fix     # Corrigir issues de linting automaticamente
@@ -103,6 +108,7 @@ npm run typecheck    # Verificar tipos TypeScript
 ```
 
 ### Testes
+
 ```bash
 npm run test         # Executar todos os testes
 npm run test:ui      # Executar testes com interface visual
@@ -110,6 +116,7 @@ npm run test:coverage # Gerar relatório de cobertura
 ```
 
 ### Quality Gate Completo
+
 ```bash
 npm run quality-gate # Executa: typecheck + lint + format:check + build
 ```
@@ -169,10 +176,10 @@ src/
 
 A matriz divide tarefas em 4 quadrantes:
 
-| | **Importante** | **Não Importante** |
-|---|---|---|
-| **Urgente** | 🔥 FAZER (DO) | 👤 DELEGAR |
-| **Não Urgente** | 📅 AGENDAR (SCHEDULE) | 🗑️ ELIMINAR |
+|                 | **Importante**        | **Não Importante** |
+| --------------- | --------------------- | ------------------ |
+| **Urgente**     | 🔥 FAZER (DO)         | 👤 DELEGAR         |
+| **Não Urgente** | 📅 AGENDAR (SCHEDULE) | 🗑️ ELIMINAR        |
 
 - **DO**: Urgente & Importante → Faça agora
 - **SCHEDULE**: Importante & Não Urgente → Agende
@@ -191,6 +198,7 @@ A matriz divide tarefas em 4 quadrantes:
 Este projeto usa GitHub Actions para automação:
 
 ### Quality Gate (`quality-gate.yml`)
+
 - ✅ TypeScript type checking
 - ✅ ESLint code linting
 - ✅ Prettier formatting check
@@ -199,6 +207,7 @@ Este projeto usa GitHub Actions para automação:
 Triggers: push para main/master, pull requests
 
 ### Tests (`tests.yml`)
+
 - ✅ Executa suite de testes
 - ✅ Gera relatório de cobertura
 - ✅ Upload para Codecov
@@ -237,18 +246,18 @@ git push origin feature/minha-feature
 
 ### Requeridas
 
-| Variable | Descrição | Fonte |
-|----------|-----------|--------|
-| `VITE_GEMINI_API_KEY` | Chave da API Google Gemini | [ai.google.dev](https://ai.google.dev) |
-| `VITE_SUPABASE_URL` | URL do projeto Supabase | [app.supabase.com](https://app.supabase.com) |
-| `VITE_SUPABASE_ANON_KEY` | Chave anônima Supabase | Dashboard Supabase |
+| Variable                 | Descrição                  | Fonte                                        |
+| ------------------------ | -------------------------- | -------------------------------------------- |
+| `VITE_GEMINI_API_KEY`    | Chave da API Google Gemini | [ai.google.dev](https://ai.google.dev)       |
+| `VITE_SUPABASE_URL`      | URL do projeto Supabase    | [app.supabase.com](https://app.supabase.com) |
+| `VITE_SUPABASE_ANON_KEY` | Chave anônima Supabase     | Dashboard Supabase                           |
 
 ### Opcionais
 
-| Variable | Descrição |
-|----------|-----------|
+| Variable                    | Descrição                              |
+| --------------------------- | -------------------------------------- |
 | `SUPABASE_SERVICE_ROLE_KEY` | Chave de service role (apenas backend) |
-| `NODE_ENV` | `development` ou `production` |
+| `NODE_ENV`                  | `development` ou `production`          |
 
 ## Performance
 
@@ -268,23 +277,27 @@ git push origin feature/minha-feature
 ## Troubleshooting
 
 ### Problema: "Cannot find module"
+
 ```bash
 npm install
 npm run typecheck
 ```
 
 ### Problema: Variáveis de ambiente não carregam
+
 1. Verifique se arquivo é `.env.local` (não `.env`)
 2. Reinicie o servidor: `npm run dev`
 3. Limpe cache: `rm -rf node_modules && npm install`
 
 ### Problema: Testes falhando
+
 ```bash
 npm run test -- --reporter=verbose
 npm run test:ui  # Debug visual
 ```
 
 ### Problema: Build falha
+
 ```bash
 npm run lint:fix
 npm run format

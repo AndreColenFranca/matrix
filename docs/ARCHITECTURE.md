@@ -180,19 +180,21 @@ App component conditional render
 
 ```typescript
 // UI State
-const [loading, setLoading] = useState(false);              // AI categorization
-const [sending, setSending] = useState(false);              // WhatsApp send
-const [error, setError] = useState<string | null>(null);    // Error messages
+const [loading, setLoading] = useState(false); // AI categorization
+const [sending, setSending] = useState(false); // WhatsApp send
+const [error, setError] = useState<string | null>(null); // Error messages
 const [isSettingsOpen, setIsSettingsOpen] = useState(false); // Settings modal
-const [showTips, setShowTips] = useState(false);            // Tips display
+const [showTips, setShowTips] = useState(false); // Tips display
 const [apiLastError, setApiLastError] = useState<number | null>(null); // API errors
-const [connectionStatus, setConnectionStatus] = useState<'unknown' | 'online' | 'offline'>('unknown');
+const [connectionStatus, setConnectionStatus] = useState<'unknown' | 'online' | 'offline'>(
+  'unknown'
+);
 
 // Toast notifications
 const [toast, setToast] = useState<ToastState>({
   message: '',
   type: 'info',
-  visible: false
+  visible: false,
 });
 ```
 
@@ -214,10 +216,10 @@ const [toast, setToast] = useState<ToastState>({
 
 ```typescript
 enum Quadrant {
-  DO = 'DO',                          // Urgent & Important
-  SCHEDULE = 'SCHEDULE',              // Important, Not Urgent
-  DELEGATE = 'DELEGATE',              // Urgent, Not Important
-  ELIMINATE = 'ELIMINATE'             // Neither urgent nor important
+  DO = 'DO', // Urgent & Important
+  SCHEDULE = 'SCHEDULE', // Important, Not Urgent
+  DELEGATE = 'DELEGATE', // Urgent, Not Important
+  ELIMINATE = 'ELIMINATE', // Neither urgent nor important
 }
 
 interface Task {
@@ -242,6 +244,7 @@ interface UserConfig {
 ### Database Types (types/database.types.ts)
 
 Auto-generated from Supabase schema with full TypeScript support for:
+
 - tasks table
 - user_config table
 - Enum types for quadrants
@@ -262,11 +265,13 @@ Auto-generated from Supabase schema with full TypeScript support for:
 
 **Purpose**: Authentication, database, storage
 **Services Used**:
+
 - Auth: Email/password authentication
 - Database: tasks and user_config tables
 - Real-time: Optional subscription to task changes
 
 **Connection**: Environment variables
+
 - VITE_SUPABASE_URL
 - VITE_SUPABASE_ANON_KEY
 - SUPABASE_SERVICE_ROLE_KEY (backend only)
@@ -278,6 +283,7 @@ Auto-generated from Supabase schema with full TypeScript support for:
 **Authentication**: Token in header
 **Payload**: Message text and destination phone number
 **Error Codes**:
+
 - 401: Invalid token
 - 503: WhatsApp disconnected
 
@@ -373,6 +379,7 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
 ### Debug Mode
 
 Set `console.log` in:
+
 - geminiService.ts: See Gemini API responses
 - useTasks.ts: Track database operations
 - useAuth.ts: Monitor authentication flow

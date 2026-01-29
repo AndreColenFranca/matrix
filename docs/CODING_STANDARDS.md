@@ -235,8 +235,8 @@ const x = 5;
 const fn = () => x;
 
 // Bad
-const x = 5
-const fn = () => x
+const x = 5;
+const fn = () => x;
 ```
 
 ### Quotes
@@ -248,7 +248,7 @@ Use single quotes for strings:
 const message = 'Hello, World!';
 
 // Bad
-const message = "Hello, World!";
+const message = 'Hello, World!';
 ```
 
 ## Naming Conventions
@@ -362,26 +362,29 @@ project/
 ### File Naming
 
 1. **Components**: PascalCase with `.tsx` extension
+
    ```typescript
-   ActivityInput.tsx
-   EisenhowerMatrix.tsx
+   ActivityInput.tsx;
+   EisenhowerMatrix.tsx;
    ```
 
 2. **Hooks**: camelCase with `.ts` extension
+
    ```typescript
-   useTasks.ts
-   useUserConfig.ts
+   useTasks.ts;
+   useUserConfig.ts;
    ```
 
 3. **Services**: camelCase with `.ts` extension
+
    ```typescript
-   geminiService.ts
-   supabaseClient.ts
+   geminiService.ts;
+   supabaseClient.ts;
    ```
 
 4. **Types**: camelCase with `.ts` extension
    ```typescript
-   database.types.ts
+   database.types.ts;
    ```
 
 ## Error Handling

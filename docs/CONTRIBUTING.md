@@ -169,18 +169,22 @@ chore: upgrade dependencies
 
 ```markdown
 ## Description
+
 Briefly describe what this PR accomplishes.
 
 ## Related Issue
+
 Closes #123
 
 ## Type of Change
+
 - [ ] New feature (non-breaking change that adds functionality)
 - [ ] Bug fix (non-breaking change that fixes an issue)
 - [ ] Breaking change (feature or fix that would cause existing functionality to change)
 - [ ] Documentation update
 
 ## How Has This Been Tested?
+
 - Tested on Windows 11 / macOS / Ubuntu
 - Manual testing steps:
   1. Do this
@@ -188,6 +192,7 @@ Closes #123
   3. Verify result
 
 ## Testing Checklist
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] All tests pass: `npm run test`
@@ -195,6 +200,7 @@ Closes #123
 - [ ] Responsive design tested
 
 ## Code Quality Checklist
+
 - [ ] Follows coding standards: `npm run quality-gate`
 - [ ] No console.log() statements (use proper logging)
 - [ ] Error handling implemented
@@ -202,12 +208,14 @@ Closes #123
 - [ ] Comments added for complex logic
 
 ## Documentation Checklist
+
 - [ ] Updated relevant .md files
 - [ ] Added JSDoc comments to new functions
 - [ ] Updated CHANGELOG (if applicable)
 - [ ] Screenshots added (if UI changes)
 
 ## Deployment Notes
+
 Any special deployment considerations or database migrations needed?
 ```
 
@@ -271,6 +279,7 @@ Follow the Conventional Commits specification:
 ### Scope (Optional)
 
 Component or area of change:
+
 - `auth`, `tasks`, `ui`, `api`, `db`, etc.
 
 ### Subject
@@ -380,11 +389,13 @@ Use Markdown with:
 
 ```markdown
 # Heading 1
+
 ## Heading 2
+
 ### Heading 3
 
 **Bold text**
-*Italic text*
+_Italic text_
 
 - List item 1
 - List item 2
@@ -401,7 +412,7 @@ code block
 \`\`\`
 
 | Column 1 | Column 2 |
-|----------|----------|
+| -------- | -------- |
 | Cell 1   | Cell 2   |
 ```
 
@@ -410,6 +421,7 @@ code block
 ### Versioning
 
 Follow Semantic Versioning (semver):
+
 - `MAJOR.MINOR.PATCH` (e.g., 1.2.3)
 - MAJOR: Breaking changes
 - MINOR: New features

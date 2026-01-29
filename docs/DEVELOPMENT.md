@@ -86,18 +86,18 @@ npm run quality-gate # Run all checks: typecheck, lint, format, build
 
 ### Required Variables
 
-| Variable | Description | Source |
-|----------|-------------|--------|
-| `VITE_GEMINI_API_KEY` | Google Generative AI API key | [ai.google.dev](https://ai.google.dev) |
-| `VITE_SUPABASE_URL` | Supabase project URL | [app.supabase.com](https://app.supabase.com) |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anonymous API key | Supabase dashboard |
+| Variable                 | Description                  | Source                                       |
+| ------------------------ | ---------------------------- | -------------------------------------------- |
+| `VITE_GEMINI_API_KEY`    | Google Generative AI API key | [ai.google.dev](https://ai.google.dev)       |
+| `VITE_SUPABASE_URL`      | Supabase project URL         | [app.supabase.com](https://app.supabase.com) |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anonymous API key   | Supabase dashboard                           |
 
 ### Optional Variables
 
-| Variable | Description |
-|----------|-------------|
+| Variable                    | Description                                |
+| --------------------------- | ------------------------------------------ |
 | `SUPABASE_SERVICE_ROLE_KEY` | Backend-only Supabase key (for migrations) |
-| `NODE_ENV` | Set to `development` or `production` |
+| `NODE_ENV`                  | Set to `development` or `production`       |
 
 ## Project Structure
 
@@ -142,6 +142,7 @@ git checkout -b feature/your-feature-name
 ```
 
 Branch naming convention:
+
 - `feature/` - New feature
 - `bugfix/` - Bug fix
 - `docs/` - Documentation
@@ -172,6 +173,7 @@ git commit -m "feat: add task filtering by quadrant"
 ```
 
 Commit message format:
+
 ```
 <type>: <subject>
 
@@ -189,6 +191,7 @@ git push origin feature/your-feature-name
 ```
 
 Create PR on GitHub with:
+
 - Clear description of changes
 - Link to related issues
 - Testing instructions
@@ -395,6 +398,7 @@ Install React DevTools browser extension to inspect component state and props.
 ### Vite HMR
 
 Hot Module Replacement works automatically:
+
 - Save files to see changes instantly
 - State is preserved during refresh
 - Perfect for UI development
@@ -412,6 +416,7 @@ Use plugins like `rollup-plugin-visualizer` to analyze bundle size.
 ### Runtime Performance
 
 Use React DevTools Profiler tab to:
+
 - Record component render times
 - Identify performance bottlenecks
 - Optimize re-renders
@@ -421,6 +426,7 @@ Use React DevTools Profiler tab to:
 ### Issue: "Cannot find module"
 
 **Solution**:
+
 ```bash
 npm install
 npm run typecheck # Check for type errors
@@ -429,6 +435,7 @@ npm run typecheck # Check for type errors
 ### Issue: Environment variables not loading
 
 **Solution**:
+
 1. Verify file is named `.env.local` (not `.env`)
 2. Restart dev server: `npm run dev`
 3. Check `vite.config.ts` for env loading config
@@ -436,6 +443,7 @@ npm run typecheck # Check for type errors
 ### Issue: TypeScript errors after dependency update
 
 **Solution**:
+
 ```bash
 npm install
 npm run typecheck
@@ -445,6 +453,7 @@ npm run typecheck
 ### Issue: Tests failing after changes
 
 **Solution**:
+
 ```bash
 npm run test          # Run tests
 npm run test:ui       # Run with UI for debugging
@@ -455,6 +464,7 @@ npm run test -- -u
 ### Issue: Build fails
 
 **Solution**:
+
 ```bash
 npm run lint:fix      # Fix linting
 npm run format        # Format code
@@ -508,6 +518,7 @@ git push origin feature/task-filtering
 ### Pull Request Status
 
 All checks must pass before merging:
+
 - Green checkmarks on required checks
 - Code review approval
 - No merge conflicts

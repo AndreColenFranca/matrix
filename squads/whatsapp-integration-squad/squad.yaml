@@ -1,0 +1,29 @@
+name: whatsapp-integration-squad
+version: '2.1'
+title: WhatsApp Integration Squad
+description: 'UAZAPI WhatsApp integration, message formatting, and connection management'
+
+metadata:
+  author: Craft (Squad Creator)
+  created: 2026-01-29
+  domain: integrations
+  status: active
+
+architecture:
+  components:
+    - type: agents
+      count: 2
+    - type: tasks
+      count: 6
+    - type: templates
+      count: 3
+    - type: checklists
+      count: 2
+
+technologies:
+  - UAZAPI
+  - TypeScript
+  - Fetch API
+
+dependencies:
+  - frontend-squad
