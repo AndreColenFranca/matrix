@@ -49,11 +49,11 @@ export const useUserConfig = (): UseUserConfigResult => {
         }
 
         if (data && typeof data === 'object') {
+          const configData = data as Record<string, unknown>;
           setConfig({
-            uazapi_url: (data as Record<string, any>).uazapi_url || DEFAULT_CONFIG.uazapi_url,
-            uazapi_token: (data as Record<string, any>).uazapi_token || null,
-            uazapi_number:
-              (data as Record<string, any>).uazapi_number || DEFAULT_CONFIG.uazapi_number,
+            uazapi_url: (configData.uazapi_url as string) || DEFAULT_CONFIG.uazapi_url,
+            uazapi_token: (configData.uazapi_token as string | null) || null,
+            uazapi_number: (configData.uazapi_number as string) || DEFAULT_CONFIG.uazapi_number,
           });
         } else {
           setConfig(DEFAULT_CONFIG);
@@ -83,10 +83,10 @@ export const useUserConfig = (): UseUserConfigResult => {
         const updatedConfig = { ...config, ...newConfig };
 
         // Try to update first, if no rows, insert
-        const { data: existingData, error: selectError } = await supabase
+        const { data: existingData } = await supabase
           .from('user_config')
           .select('user_id')
-          .eq('user_id', user.id)
+          .eq('user_id', user.id as string)
           .single();
 
         if (existingData) {
@@ -98,16 +98,17 @@ export const useUserConfig = (): UseUserConfigResult => {
             updated_at: new Date().toISOString(),
           };
 
-          const { error: updateError } = await (supabase
+          const { error: updateError } = await supabase
             .from('user_config')
-            .update(updateData)
-            .eq('user_id', user.id) as any);
+            // @ts-expect-error - Supabase type inference issue with Update type
+            .update(updateData as any)
+            .eq('user_id', user.id as string);
 
           if (updateError) throw updateError;
         } else {
           // Insert new
           const insertData = {
-            user_id: user.id,
+            user_id: user.id as string,
             uazapi_url: updatedConfig.uazapi_url,
             uazapi_token: updatedConfig.uazapi_token,
             uazapi_number: updatedConfig.uazapi_number,
@@ -115,9 +116,8 @@ export const useUserConfig = (): UseUserConfigResult => {
             updated_at: new Date().toISOString(),
           };
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const query: any = supabase.from('user_config').insert([insertData]);
-          const { error: insertError } = await query;
+          // @ts-expect-error - Supabase type inference issue with Insert type
+          const { error: insertError } = await supabase.from('user_config').insert([insertData]);
 
           if (insertError) throw insertError;
         }

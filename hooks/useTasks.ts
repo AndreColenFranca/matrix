@@ -35,7 +35,7 @@ export const useTasks = (): UseTasksResult => {
         const { data, error: fetchError } = await supabase
           .from('tasks')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', user.id as string)
           .order('created_at', { ascending: false });
 
         if (fetchError) throw fetchError;
@@ -52,14 +52,14 @@ export const useTasks = (): UseTasksResult => {
 
     // Subscribe to realtime changes
     const channel = supabase
-      .channel(`tasks-${user.id}`)
+      .channel(`tasks-${user.id as string}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'tasks',
-          filter: `user_id=eq.${user.id}`,
+          filter: `user_id=eq.${user.id as string}`,
         },
         (payload: any) => {
           if (payload.eventType === 'INSERT') {
@@ -91,14 +91,15 @@ export const useTasks = (): UseTasksResult => {
         setError(null);
 
         const taskData = {
-          user_id: user.id,
+          user_id: user.id as string,
           text,
           quadrant,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
 
-        const { error: insertError } = await (supabase.from('tasks').insert([taskData]) as any);
+        // @ts-expect-error - Supabase type inference issue with Insert type
+        const { error: insertError } = await supabase.from('tasks').insert([taskData]);
 
         if (insertError) throw insertError;
       } catch (err: any) {
@@ -127,7 +128,7 @@ export const useTasks = (): UseTasksResult => {
           .from('tasks')
           .delete()
           .eq('id', id)
-          .eq('user_id', user.id);
+          .eq('user_id', user.id as string);
 
         if (deleteError) throw deleteError;
       } catch (err: any) {
@@ -148,7 +149,10 @@ export const useTasks = (): UseTasksResult => {
     try {
       setError(null);
 
-      const { error: deleteError } = await supabase.from('tasks').delete().eq('user_id', user.id);
+      const { error: deleteError } = await supabase
+        .from('tasks')
+        .delete()
+        .eq('user_id', user.id as string);
 
       if (deleteError) throw deleteError;
     } catch (err: any) {
@@ -180,11 +184,12 @@ export const useTasks = (): UseTasksResult => {
           updated_at: new Date().toISOString(),
         };
 
-        const { error: updateError } = await (supabase
+        const { error: updateError } = await supabase
           .from('tasks')
-          .update(updateData)
+          // @ts-expect-error - Supabase type inference issue with Update type
+          .update(updateData as any)
           .eq('id', id)
-          .eq('user_id', user.id) as any);
+          .eq('user_id', user.id as string);
 
         if (updateError) throw updateError;
       } catch (err: any) {
