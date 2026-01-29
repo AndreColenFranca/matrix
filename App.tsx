@@ -16,7 +16,7 @@ interface ToastState {
 
 const App: React.FC = () => {
   const { user, signOut, loading: authLoading } = useAuth();
-  const { tasks, addTask, deleteTask, clearAllTasks, updateTask } = useTasks();
+  const { tasks, addTask, deleteTask, clearAllTasks, updateTask, updateTaskText } = useTasks();
   const { config, updateConfig } = useUserConfig();
 
   const [loading, setLoading] = useState(false);
@@ -98,6 +98,15 @@ const App: React.FC = () => {
       showToast(`✨ Tarefa movida para "${quadrantNames[newQuadrant]}"!`, 'success');
     } catch (_err) {
       showToast('Erro ao mover tarefa', 'error');
+    }
+  };
+
+  const handleUpdateTaskText = async (id: string, newText: string) => {
+    try {
+      await updateTaskText(id, newText);
+      showToast('✏️ Tarefa atualizada com sucesso!', 'success');
+    } catch (_err) {
+      showToast('Erro ao atualizar tarefa', 'error');
     }
   };
 
@@ -318,7 +327,12 @@ const App: React.FC = () => {
           </div>
         )}
 
-        <EisenhowerMatrix tasks={tasks} onDelete={handleDeleteTask} onMove={handleMoveTask} />
+        <EisenhowerMatrix
+          tasks={tasks}
+          onDelete={handleDeleteTask}
+          onMove={handleMoveTask}
+          onUpdate={handleUpdateTaskText}
+        />
       </div>
 
       {/* Settings Modal */}

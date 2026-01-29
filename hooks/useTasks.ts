@@ -11,6 +11,7 @@ interface UseTasksResult {
   deleteTask: (id: string) => Promise<void>;
   clearAllTasks: () => Promise<void>;
   updateTask: (id: string, quadrant: Quadrant) => Promise<void>;
+  updateTaskText: (id: string, newText: string) => Promise<void>;
 }
 
 export const useTasks = (): UseTasksResult => {
@@ -201,6 +202,50 @@ export const useTasks = (): UseTasksResult => {
     [user]
   );
 
+  const updateTaskText = useCallback(
+    async (id: string, newText: string) => {
+      if (!user) {
+        setError('Usuário não autenticado');
+        return;
+      }
+
+      if (!newText.trim()) {
+        setError('Texto da tarefa não pode estar vazio');
+        return;
+      }
+
+      try {
+        setError(null);
+
+        // Atualiza imediatamente na tela (optimistic update)
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === id ? { ...t, text: newText.trim(), updated_at: new Date().toISOString() } : t
+          )
+        );
+
+        const updateData = {
+          text: newText.trim(),
+          updated_at: new Date().toISOString(),
+        };
+
+        const { error: updateError } = await supabase
+          .from('tasks')
+          // @ts-expect-error - Supabase type inference issue with Update type
+          .update(updateData as any)
+          .eq('id', id)
+          .eq('user_id', user.id as string);
+
+        if (updateError) throw updateError;
+      } catch (err: any) {
+        console.error('Error updating task text:', err);
+        setError('Erro ao editar tarefa');
+        throw err;
+      }
+    },
+    [user]
+  );
+
   return {
     tasks,
     loading,
@@ -209,5 +254,6 @@ export const useTasks = (): UseTasksResult => {
     deleteTask,
     clearAllTasks,
     updateTask,
+    updateTaskText,
   };
 };

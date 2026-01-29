@@ -1,10 +1,12 @@
 import React from 'react';
 import { Task, Quadrant } from '../types';
+import TaskItem from './TaskItem';
 
 interface EisenhowerMatrixProps {
   tasks: Task[];
   onDelete: (id: string) => void;
   onMove: (id: string, quadrant: Quadrant) => void;
+  onUpdate: (id: string, newText: string) => void;
 }
 
 interface QuadrantBoxProps {
@@ -15,6 +17,7 @@ interface QuadrantBoxProps {
   tasks: Task[];
   onDelete: (id: string) => void;
   onMove: (id: string, quadrant: Quadrant) => void;
+  onUpdate: (id: string, newText: string) => void;
   currentQuadrant: Quadrant;
 }
 
@@ -26,10 +29,9 @@ const QuadrantBox: React.FC<QuadrantBoxProps> = ({
   tasks,
   onDelete,
   onMove,
+  onUpdate,
   currentQuadrant,
 }) => {
-  const [showMoveMenu, setShowMoveMenu] = React.useState<string | null>(null);
-
   const otherQuadrants = Object.values(Quadrant).filter((q) => q !== currentQuadrant);
 
   return (
@@ -56,51 +58,14 @@ const QuadrantBox: React.FC<QuadrantBoxProps> = ({
           </div>
         ) : (
           tasks.map((task) => (
-            <div
+            <TaskItem
               key={task.id}
-              className="bg-white/90 p-3 rounded-lg shadow-sm border border-slate-100 flex justify-between items-start group animate-in slide-in-from-top-2 duration-300 relative"
-            >
-              <span className="text-sm font-medium text-slate-800 leading-tight flex-1">
-                {task.text}
-              </span>
-              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="relative">
-                  <button
-                    onClick={() => setShowMoveMenu(showMoveMenu === task.id ? null : task.id)}
-                    className="text-slate-400 hover:text-blue-600 p-1 transition-colors"
-                    title="Mover para outro quadrante"
-                  >
-                    <i className="fas fa-arrow-right text-xs"></i>
-                  </button>
-                  {showMoveMenu === task.id && (
-                    <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-slate-200 z-50 min-w-[140px]">
-                      {otherQuadrants.map((quadrant) => (
-                        <button
-                          key={quadrant}
-                          onClick={() => {
-                            onMove(task.id, quadrant);
-                            setShowMoveMenu(null);
-                          }}
-                          className="w-full text-left px-3 py-2 text-xs hover:bg-slate-100 transition-colors first:rounded-t-lg last:rounded-b-lg text-slate-700 font-medium"
-                        >
-                          {quadrant === Quadrant.DO && '🔥 Fazer'}
-                          {quadrant === Quadrant.SCHEDULE && '📅 Agendar'}
-                          {quadrant === Quadrant.DELEGATE && '👤 Delegar'}
-                          {quadrant === Quadrant.ELIMINATE && '🗑️ Eliminar'}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <button
-                  onClick={() => onDelete(task.id)}
-                  className="text-slate-400 hover:text-red-600 p-1 transition-colors"
-                  title="Excluir tarefa"
-                >
-                  <i className="fas fa-times text-xs"></i>
-                </button>
-              </div>
-            </div>
+              task={task}
+              otherQuadrants={otherQuadrants}
+              onDelete={onDelete}
+              onMove={onMove}
+              onUpdate={onUpdate}
+            />
           ))
         )}
       </div>
@@ -108,7 +73,12 @@ const QuadrantBox: React.FC<QuadrantBoxProps> = ({
   );
 };
 
-export const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ tasks, onDelete, onMove }) => {
+export const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({
+  tasks,
+  onDelete,
+  onMove,
+  onUpdate,
+}) => {
   const getTasksByQuadrant = (q: Quadrant) => tasks.filter((t) => t.quadrant === q);
 
   return (
@@ -122,6 +92,7 @@ export const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ tasks, onDel
         tasks={getTasksByQuadrant(Quadrant.DO)}
         onDelete={onDelete}
         onMove={onMove}
+        onUpdate={onUpdate}
         currentQuadrant={Quadrant.DO}
       />
 
@@ -134,6 +105,7 @@ export const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ tasks, onDel
         tasks={getTasksByQuadrant(Quadrant.SCHEDULE)}
         onDelete={onDelete}
         onMove={onMove}
+        onUpdate={onUpdate}
         currentQuadrant={Quadrant.SCHEDULE}
       />
 
@@ -146,6 +118,7 @@ export const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ tasks, onDel
         tasks={getTasksByQuadrant(Quadrant.DELEGATE)}
         onDelete={onDelete}
         onMove={onMove}
+        onUpdate={onUpdate}
         currentQuadrant={Quadrant.DELEGATE}
       />
 
@@ -158,6 +131,7 @@ export const EisenhowerMatrix: React.FC<EisenhowerMatrixProps> = ({ tasks, onDel
         tasks={getTasksByQuadrant(Quadrant.ELIMINATE)}
         onDelete={onDelete}
         onMove={onMove}
+        onUpdate={onUpdate}
         currentQuadrant={Quadrant.ELIMINATE}
       />
     </div>
