@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Task, Quadrant } from '../types';
+import { supabase } from '../lib/supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
 
 interface UseTasksResult {
   tasks: Task[];
@@ -11,118 +13,193 @@ interface UseTasksResult {
   updateTask: (id: string, quadrant: Quadrant) => Promise<void>;
 }
 
-const STORAGE_KEY = 'eisenhower_tasks';
-
 export const useTasks = (): UseTasksResult => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
-  // Load tasks from localStorage on mount
+  // Fetch tasks on mount and when user changes
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setTasks(Array.isArray(parsed) ? parsed : []);
-      }
-    } catch (err) {
-      console.error('Error loading tasks from localStorage:', err);
+    if (!user) {
       setTasks([]);
-    } finally {
       setLoading(false);
+      return;
     }
-  }, []);
 
-  const addTask = useCallback((text: string, quadrant: Quadrant) => {
-    return new Promise<void>((resolve, reject) => {
+    const fetchTasks = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const { data, error: fetchError } = await supabase
+          .from('tasks')
+          .select('*')
+          .eq('user_id', user.id as string)
+          .order('created_at', { ascending: false });
+
+        if (fetchError) throw fetchError;
+        setTasks(data || []);
+      } catch (err: any) {
+        console.error('Error fetching tasks:', err);
+        setError('Erro ao carregar tarefas');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel(`tasks-${user.id as string}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'tasks',
+          filter: `user_id=eq.${user.id as string}`,
+        },
+        (payload: any) => {
+          if (payload.eventType === 'INSERT') {
+            setTasks((prev) => [payload.new as Task, ...prev]);
+          } else if (payload.eventType === 'DELETE') {
+            setTasks((prev) => prev.filter((t) => t.id !== payload.old.id));
+          } else if (payload.eventType === 'UPDATE') {
+            setTasks((prev) =>
+              prev.map((t) => (t.id === payload.new.id ? (payload.new as Task) : t))
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [user]);
+
+  const addTask = useCallback(
+    async (text: string, quadrant: Quadrant) => {
+      if (!user) {
+        setError('Usuário não autenticado');
+        return;
+      }
+
       try {
         setError(null);
 
-        const now = new Date().toISOString();
-        const newTask: Task = {
-          id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          user_id: 'local',
+        const taskData = {
+          user_id: user.id as string,
           text,
           quadrant,
-          created_at: now,
-          updated_at: now,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         };
 
-        setTasks((prev) => {
-          const updated = [newTask, ...prev];
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-          return updated;
-        });
+        // @ts-expect-error - Supabase type inference issue with Insert type
+        const { error: insertError } = await supabase.from('tasks').insert([taskData]);
 
-        resolve();
+        if (insertError) throw insertError;
       } catch (err: any) {
         console.error('Error adding task:', err);
         setError('Erro ao adicionar tarefa');
-        reject(err);
+        throw err;
       }
-    });
-  }, []);
+    },
+    [user]
+  );
 
-  const deleteTask = useCallback((id: string) => {
-    return new Promise<void>((resolve, reject) => {
+  const deleteTask = useCallback(
+    async (id: string) => {
+      if (!user) {
+        setError('Usuário não autenticado');
+        return;
+      }
+
       try {
         setError(null);
 
-        setTasks((prev) => {
-          const updated = prev.filter((t) => t.id !== id);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-          return updated;
-        });
+        // Remove imediatamente da tela (otimistic update)
+        setTasks((prev) => prev.filter((t) => t.id !== id));
 
-        resolve();
+        const { error: deleteError } = await supabase
+          .from('tasks')
+          .delete()
+          .eq('id', id)
+          .eq('user_id', user.id as string);
+
+        if (deleteError) throw deleteError;
       } catch (err: any) {
         console.error('Error deleting task:', err);
         setError('Erro ao remover tarefa');
-        reject(err);
+        throw err;
       }
-    });
-  }, []);
+    },
+    [user]
+  );
 
-  const clearAllTasks = useCallback(() => {
-    return new Promise<void>((resolve, reject) => {
+  const clearAllTasks = useCallback(async () => {
+    if (!user) {
+      setError('Usuário não autenticado');
+      return;
+    }
+
+    try {
+      setError(null);
+
+      const { error: deleteError } = await supabase
+        .from('tasks')
+        .delete()
+        .eq('user_id', user.id as string);
+
+      if (deleteError) throw deleteError;
+    } catch (err: any) {
+      console.error('Error clearing tasks:', err);
+      setError('Erro ao limpar tarefas');
+      throw err;
+    }
+  }, [user]);
+
+  const updateTask = useCallback(
+    async (id: string, quadrant: Quadrant) => {
+      if (!user) {
+        setError('Usuário não autenticado');
+        return;
+      }
+
       try {
         setError(null);
 
-        setTasks([]);
-        localStorage.removeItem(STORAGE_KEY);
+        // Atualiza imediatamente na tela
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === id ? { ...t, quadrant, updated_at: new Date().toISOString() } : t
+          )
+        );
 
-        resolve();
-      } catch (err: any) {
-        console.error('Error clearing tasks:', err);
-        setError('Erro ao limpar tarefas');
-        reject(err);
-      }
-    });
-  }, []);
+        const updateData = {
+          quadrant,
+          updated_at: new Date().toISOString(),
+        };
 
-  const updateTask = useCallback((id: string, quadrant: Quadrant) => {
-    return new Promise<void>((resolve, reject) => {
-      try {
-        setError(null);
+        const { error: updateError } = await supabase
+          .from('tasks')
+          // @ts-expect-error - Supabase type inference issue with Update type
+          .update(updateData as any)
+          .eq('id', id)
+          .eq('user_id', user.id as string);
 
-        const now = new Date().toISOString();
-        setTasks((prev) => {
-          const updated = prev.map((t) =>
-            t.id === id ? { ...t, quadrant, updated_at: now } : t
-          );
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-          return updated;
-        });
-
-        resolve();
+        if (updateError) throw updateError;
       } catch (err: any) {
         console.error('Error updating task:', err);
         setError('Erro ao mover tarefa');
-        reject(err);
+        throw err;
       }
-    });
-  }, []);
+    },
+    [user]
+  );
 
   return {
     tasks,
