@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { UserConfig } from '../types';
-import { useAuth } from '../contexts/AuthContext';
 
 const DEFAULT_CONFIG: Omit<UserConfig, 'user_id' | 'created_at' | 'updated_at'> = {
   uazapi_url: 'https://free.uazapi.com/send/text',
@@ -16,14 +15,13 @@ interface UseUserConfigResult {
   error: string | null;
   updateConfig: (
     newConfig: Partial<Omit<UserConfig, 'user_id' | 'created_at' | 'updated_at'>>
-  ) => Promise<void>;
+  ) => void;
 }
 
 export const useUserConfig = (): UseUserConfigResult => {
   const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
 
   // Load config from localStorage on mount
   useEffect(() => {
@@ -51,7 +49,6 @@ export const useUserConfig = (): UseUserConfigResult => {
       } catch (err: any) {
         console.error('Error updating config:', err);
         setError('Erro ao salvar configurações');
-        throw err;
       }
     },
     [config]
