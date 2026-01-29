@@ -3,8 +3,6 @@ import { Quadrant } from './types';
 import { categorizeTask } from './geminiService';
 import { EisenhowerMatrix } from './components/EisenhowerMatrix';
 import { ActivityInput } from './components/ActivityInput';
-import { Login } from './components/Auth/Login';
-import { useAuth } from './contexts/AuthContext';
 import { useTasks } from './hooks/useTasks';
 import { useUserConfig } from './hooks/useUserConfig';
 
@@ -15,7 +13,6 @@ interface ToastState {
 }
 
 const App: React.FC = () => {
-  const { user, signOut, loading: authLoading } = useAuth();
   const { tasks, addTask, deleteTask, clearAllTasks, updateTask } = useTasks();
   const { config, updateConfig } = useUserConfig();
 
@@ -77,14 +74,6 @@ const App: React.FC = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      showToast('Logout realizado com sucesso', 'success');
-    } catch (_err) {
-      showToast('Erro ao fazer logout', 'error');
-    }
-  };
 
   const handleMoveTask = async (id: string, newQuadrant: Quadrant) => {
     try {
@@ -160,20 +149,6 @@ const App: React.FC = () => {
     }
   };
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-indigo-700">
-        <div className="text-center">
-          <i className="fas fa-spinner fa-spin text-4xl text-white mb-4"></i>
-          <p className="text-white font-semibold">Carregando...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Login />;
-  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 pb-20">
@@ -201,17 +176,6 @@ const App: React.FC = () => {
       </div>
 
       <header className="mb-10 text-center relative">
-        <div className="absolute left-0 top-0 hidden md:flex items-center gap-2">
-          <span className="text-xs text-slate-500 font-medium">
-            Olá, <span className="font-bold text-slate-700">{user.email?.split('@')[0]}</span>
-          </span>
-          <button
-            onClick={handleLogout}
-            className="ml-4 px-3 py-1 text-xs rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all"
-          >
-            <i className="fas fa-sign-out-alt mr-1"></i> Logout
-          </button>
-        </div>
         <div className="absolute right-0 top-0 hidden md:flex items-center gap-2">
           <span
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase border transition-colors ${
