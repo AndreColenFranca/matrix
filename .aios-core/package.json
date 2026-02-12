@@ -1,103 +1,132 @@
 {
-  "name": "@aios-fullstack/core",
-  "version": "4.31.0",
-  "description": "AIOS-FullStack Core - Meta-agent and component generation system",
-  "main": "index.js",
-  "module": "index.esm.js",
-  "types": "index.d.ts",
+  "name": "aios-core",
+  "version": "4.0.0",
+  "description": "Synkra AIOS: AI-Orchestrated System for Full Stack Development - Core Framework",
   "bin": {
-    "aios-core": "bin/aios-core.js"
+    "aios": "bin/aios.js",
+    "aios-core": "bin/aios.js",
+    "aios-minimal": "bin/aios-minimal.js"
   },
+  "preferGlobal": false,
+  "workspaces": [
+    "packages/*"
+  ],
   "files": [
-    "lib/",
     "bin/",
-    "templates/",
-    "utils/",
-    "tasks/",
-    "docs/",
-    "elicitation/",
-    "index.js",
-    "index.esm.js",
-    "index.d.ts",
+    "scripts/",
+    "packages/",
+    ".aios-core/",
+    ".claude/CLAUDE.md",
+    ".claude/rules/",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "build": "node ../tools/build-core.js",
-    "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "jest tests/unit",
-    "test:integration": "jest tests/integration",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "format": "prettier --write \"**/*.md\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:health-check": "mocha tests/health-check/**/*.test.js --timeout 30000",
+    "lint": "eslint . --cache --cache-location .eslintcache",
+    "typecheck": "tsc --noEmit",
+    "release": "semantic-release",
+    "release:test": "semantic-release --dry-run --no-ci || echo 'Config test complete - authentication errors are expected locally'",
+    "generate:manifest": "node scripts/generate-install-manifest.js",
+    "validate:manifest": "node scripts/validate-manifest.js",
+    "validate:structure": "node .aios-core/infrastructure/scripts/source-tree-guardian/index.js",
+    "validate:agents": "node .aios-core/infrastructure/scripts/validate-agents.js",
+    "sync:ide": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync",
+    "sync:ide:validate": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate",
+    "sync:ide:check": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate --strict",
+    "sync:ide:cursor": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide cursor",
+    "sync:ide:windsurf": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide windsurf",
+    "prepublishOnly": "npm run generate:manifest && npm run validate:manifest",
+    "prepare": "husky"
   },
   "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "@kayvan/markdown-tree-parser": "^1.5.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "ansi-to-html": "^0.7.2",
     "chalk": "^4.1.2",
-    "commander": "^14.0.0",
-    "fs-extra": "^11.3.0",
-    "glob": "^11.0.3",
-    "js-yaml": "^4.1.0",
+    "chokidar": "^3.5.3",
+    "cli-progress": "^3.12.0",
+    "commander": "^12.1.0",
+    "execa": "^5.1.1",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.2",
+    "glob": "^10.4.4",
+    "handlebars": "^4.7.8",
     "inquirer": "^8.2.6",
-    "validator": "^13.15.15",
-    "diff": "^5.2.0",
-    "highlight.js": "^11.9.0"
-  },
-  "peerDependencies": {
-    "@aios-fullstack/memory": "^4.31.0",
-    "@aios-fullstack/security": "^4.31.0",
-    "@aios-fullstack/performance": "^4.31.0",
-    "@aios-fullstack/telemetry": "^4.31.0"
-  },
-  "peerDependenciesMeta": {
-    "@aios-fullstack/memory": {
-      "optional": true
-    },
-    "@aios-fullstack/security": {
-      "optional": true
-    },
-    "@aios-fullstack/performance": {
-      "optional": true
-    },
-    "@aios-fullstack/telemetry": {
-      "optional": true
-    }
+    "js-yaml": "^4.1.0",
+    "ora": "^5.4.1",
+    "picocolors": "^1.1.1",
+    "proper-lockfile": "^4.1.2",
+    "semver": "^7.7.2",
+    "validator": "^13.15.15"
   },
   "keywords": [
+    "ai",
     "aios",
-    "meta-agent",
-    "component-generation",
-    "ai-orchestration",
+    "agile",
+    "agents",
+    "orchestrator",
     "fullstack",
-    "development-tools"
+    "development",
+    "cli",
+    "cross-platform",
+    "interactive",
+    "wizard",
+    "modern-ux",
+    "vite-style",
+    "automation"
   ],
-  "author": "AIOS Fullstack Team",
+  "author": "Synkra AIOS Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/allfluenceinc/aios-fullstack.git",
-    "directory": "aios-core"
+    "url": "git+https://github.com/SynkraAI/aios-core.git"
   },
   "bugs": {
-    "url": "https://github.com/allfluenceinc/aios-fullstack/issues"
+    "url": "https://github.com/SynkraAI/aios-core/issues"
   },
-  "homepage": "https://github.com/allfluenceinc/aios-fullstack/tree/main/aios-core#readme",
+  "homepage": "https://github.com/SynkraAI/aios-core#readme",
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "conventional-changelog-conventionalcommits": "^9.1.0",
+    "eslint": "^9.38.0",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "lint-staged": "^16.1.1",
+    "mocha": "^11.7.5",
+    "prettier": "^3.5.3",
+    "semantic-release": "^25.0.2",
+    "typescript": "^5.9.3",
+    "yaml-lint": "^1.7.0"
   },
-  "exports": {
-    ".": {
-      "types": "./index.d.ts",
-      "import": "./index.esm.js",
-      "require": "./index.js"
-    },
-    "./templates": "./templates/",
-    "./utils": "./utils/",
-    "./tasks": "./tasks/",
-    "./docs": "./docs/",
-    "./elicitation": "./elicitation/"
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts}": [
+      "eslint --fix --cache --cache-location .eslintcache",
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ],
+    ".aios-core/development/agents/*.md": [
+      "npm run sync:ide"
+    ]
+  },
+  "overrides": {
+    "tar": "^7.5.7",
+    "diff": "^8.0.3"
   }
 }
